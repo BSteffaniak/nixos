@@ -288,6 +288,8 @@
     networkmanager
     networkmanagerapplet
     wirelesstools
+    eslint_d
+    prettierd
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
