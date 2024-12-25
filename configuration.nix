@@ -11,16 +11,17 @@
     ];
 
   # Booloader
-  boot = {
-    initrd = {
-      kernelModules = [ "nvidia" ];
-    };
-    kernelPackages = pkgs.linuxPackages_latest;
-    extraModulePackages = with config.boot.kernelPackages; [
-        nvidia_x11
-        rtl88xxau-aircrack
-    ];
-  };
+  # boot = {
+  #   kernelModules = [ "wl" ];  
+  #   initrd = {
+  #     kernelModules = [ "nvidia" ];
+  #   };
+  #   kernelPackages = pkgs.linuxPackages_latest;
+  #   extraModulePackages = with config.boot.kernelPackages; [
+  #       nvidia_x11
+  #       broadcom_sta
+  #   ];
+  # };
 
   nix = {
     package = pkgs.nix;
@@ -149,6 +150,9 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.extraModulePackages = [ config.boot.kernelPackages.broadcom_sta ];
+  boot.kernelModules = [ "wl" ]; # set of kernel modules loaded in second stage of boot process
+  boot.initrd.kernelModules = [ "wl" ]; # list of modules always loaded by the initrd
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -277,8 +281,13 @@
     nemo
     gnome-tweaks
     steam
+    xclip
     lshw
+    pciutils
+    usbutils
+    networkmanager
     networkmanagerapplet
+    wirelesstools
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
