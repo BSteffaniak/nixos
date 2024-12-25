@@ -2,7 +2,12 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
 
 {
   imports = [
@@ -230,6 +235,7 @@
       font-awesome
       fira-code
       fira-code-symbols
+      fira-code-nerdfont
     ];
   };
 
@@ -297,6 +303,7 @@
     eslint_d
     prettierd
     nixfmt-rfc-style
+    inputs.wezterm.packages."${pkgs.system}".default
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
