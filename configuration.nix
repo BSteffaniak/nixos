@@ -5,14 +5,14 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+  ];
 
   # Booloader
   # boot = {
-  #   kernelModules = [ "wl" ];  
+  #   kernelModules = [ "wl" ];
   #   initrd = {
   #     kernelModules = [ "nvidia" ];
   #   };
@@ -25,7 +25,10 @@
 
   nix = {
     package = pkgs.nix;
-    settings.experimental-features = [ "nix-command" "flakes" ];
+    settings.experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
   };
 
   # XDG Portals
@@ -78,7 +81,7 @@
       layout = "us";
       xkbVariant = "";
       excludePackages = [ pkgs.xterm ];
-      videoDrivers = ["nvidia"];
+      videoDrivers = [ "nvidia" ];
       libinput.enable = true;
       displayManager.gdm = {
         enable = true;
@@ -145,7 +148,7 @@
     XDG_SESSION_DESKTOP = "Hyprland";
     GTK_USE_PORTAL = "1";
     NIXOS_XDG_OPEN_USE_PORTAL = "1";
-  }; 
+  };
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -214,7 +217,10 @@
   users.users.braden = {
     isNormalUser = true;
     description = "Braden Steffaniak";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+    ];
     packages = with pkgs; [
     ];
   };
