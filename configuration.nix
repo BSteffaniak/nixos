@@ -15,16 +15,7 @@
     initrd = {
       kernelModules = [ "nvidia" ];
     };
-    kernelPackages = pkgs.linuxPackages_latest;
-    extraModulePackages = with config.boot.kernelPackages; [
-        nvidia_x11
-        rtl88xxau-aircrack
-    ];
-  };
-
-  nix = {
-    package = pkgs.nix;
-    settings.experimental-features = [ "nix-command" "flakes" ];
+    extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
   };
 
   # XDG Portals
@@ -188,20 +179,20 @@
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  # hardware.pulseaudio.enable = false;
+  hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
-  # services.pipewire = {
-  #   enable = true;
-  #   alsa.enable = true;
-  #   alsa.support32Bit = true;
-  #   pulse.enable = true;
-  #   # If you want to use JACK applications, uncomment this
-  #   jack.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    # If you want to use JACK applications, uncomment this
+    #jack.enable = true;
 
-  #   # use the example session manager (no others are packaged yet so this is enabled by default,
-  #   # no need to redefine it in your config for now)
-  #   #media-session.enable = true;
-  # };
+    # use the example session manager (no others are packaged yet so this is enabled by default,
+    # no need to redefine it in your config for now)
+    #media-session.enable = true;
+  };
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
@@ -212,16 +203,12 @@
     description = "Braden Steffaniak";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
+    #  thunderbird
     ];
   };
 
-  fonts = {
-    packages = with pkgs; [
-      font-awesome
-      fira-code
-      fira-code-symbols
-    ];
-  };
+  # Install firefox.
+  programs.firefox.enable = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -249,6 +236,7 @@
     xdg-desktop-portal-hyprland
     hyprpaper
     wofi
+    firefox-wayland
     swww
     grim
     xdg-utils
@@ -263,22 +251,6 @@
     git
     rustup
     neovim
-    nodejs_22
-    pnpm
-    go
-    python3
-    nix-search
-    unzip
-    tmux
-    lazygit
-    htop
-    fzf
-    ripgrep
-    nemo
-    gnome-tweaks
-    steam
-    lshw
-    networkmanagerapplet
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
