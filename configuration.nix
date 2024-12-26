@@ -304,6 +304,7 @@
     prettierd
     nixfmt-rfc-style
     inputs.wezterm.packages."${pkgs.system}".default
+    ncdu
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
