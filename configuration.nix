@@ -59,9 +59,9 @@
 
   # Hardware
   hardware = {
-    opengl = {
+    graphics = {
       enable = true;
-      driSupport32Bit = true;
+      enable32Bit = true;
       extraPackages = with pkgs; [
         vaapiVdpau
         libvdpau-va-gl
@@ -83,16 +83,14 @@
   services = {
     xserver = {
       enable = true;
-      layout = "us";
-      xkbVariant = "";
       excludePackages = [ pkgs.xterm ];
       videoDrivers = [ "nvidia" ];
-      libinput.enable = true;
       displayManager.gdm = {
         enable = true;
         wayland = true;
       };
     };
+    libinput.enable = true;
     dbus.enable = true;
     gvfs.enable = true;
     tumbler.enable = true;
