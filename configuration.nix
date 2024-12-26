@@ -304,6 +304,7 @@
     nixfmt-rfc-style
     inputs.wezterm.packages."${pkgs.system}".default
     ncdu
+    appimage-run
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -316,6 +317,15 @@
 
   systemd.user.services.tmux = {
     enable = false;
+  };
+
+  boot.binfmt.registrations.appimage = {
+    wrapInterpreterInShell = false;
+    interpreter = "${pkgs.appimage-run}/bin/appimage-run";
+    recognitionType = "magic";
+    offset = 0;
+    mask = ''\xff\xff\xff\xff\x00\x00\x00\x00\xff\xff\xff'';
+    magicOrExtension = ''\x7fELF....AI\x02'';
   };
 
   # List services that you want to enable:
