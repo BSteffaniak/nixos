@@ -2,6 +2,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     wezterm.url = "github:wez/wezterm?dir=nix";
+    ra-multiplex.url = "github:pr2502/ra-multiplex";
   };
 
   outputs =
