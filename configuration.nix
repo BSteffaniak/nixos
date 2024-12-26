@@ -297,6 +297,7 @@
     pciutils
     usbutils
     slurm-nm
+    killall
     networkmanager
     networkmanagerapplet
     wirelesstools
