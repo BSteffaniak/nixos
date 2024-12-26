@@ -296,6 +296,7 @@
     lshw
     pciutils
     usbutils
+    slurm-nm
     networkmanager
     networkmanagerapplet
     wirelesstools
