@@ -314,6 +314,10 @@
   #   enableSSHSupport = true;
   # };
 
+  systemd.user.services.tmux = {
+    enable = false;
+  };
+
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
