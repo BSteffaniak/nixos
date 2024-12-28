@@ -263,6 +263,7 @@
     swaylock
     xdg-desktop-portal-hyprland
     hyprpaper
+    fuzzel
     wofi
     swww
     grim
