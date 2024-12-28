@@ -309,6 +309,7 @@
     inputs.ra-multiplex.packages."${pkgs.system}".default
     ncdu
     appimage-run
+    clang
     jq
   ];
 
