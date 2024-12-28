@@ -309,6 +309,7 @@
     inputs.ra-multiplex.packages."${pkgs.system}".default
     ncdu
     appimage-run
+    jq
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
