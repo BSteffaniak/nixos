@@ -13,7 +13,15 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    inputs.home-manager.nixosModules.default
   ];
+
+  home-manager = {
+    extraSpecialArgs = { inherit inputs; };
+    users = {
+      "braden" = import ./home.nix;
+    };
+  };
 
   # Booloader
   # boot = {
@@ -314,6 +322,7 @@
     jq
     okular
     glib
+    inputs.home-manager.packages."${pkgs.system}".default
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
