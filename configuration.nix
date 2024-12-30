@@ -226,6 +226,7 @@
       "wheel"
     ];
     packages = with pkgs; [
+      signal-desktop
     ];
   };
 
