@@ -312,6 +312,8 @@
     appimage-run
     clang
     jq
+    okular
+    glib
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
