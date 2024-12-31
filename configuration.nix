@@ -232,6 +232,7 @@
     extraGroups = [
       "networkmanager"
       "wheel"
+      "docker"
     ];
     packages = with pkgs; [
       signal-desktop
@@ -346,6 +347,8 @@
     mask = ''\xff\xff\xff\xff\x00\x00\x00\x00\xff\xff\xff'';
     magicOrExtension = ''\x7fELF....AI\x02'';
   };
+
+  virtualisation.docker.enable = true;
 
   # List services that you want to enable:
 
