@@ -325,6 +325,9 @@
     okular
     glib
     inputs.home-manager.packages."${pkgs.system}".default
+    awscli2
+    kubectl
+    doctl
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
