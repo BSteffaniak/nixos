@@ -355,7 +355,12 @@
     magicOrExtension = ''\x7fELF....AI\x02'';
   };
 
-  virtualisation.docker.enable = true;
+  virtualisation.docker = {
+    enable = true;
+    daemon.settings = {
+      data-root = "/hdd/docker";
+    };
+  };
 
   # List services that you want to enable:
 
