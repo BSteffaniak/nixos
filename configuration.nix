@@ -328,6 +328,8 @@
     inputs.home-manager.packages."${pkgs.system}".default
     awscli2
     kubectl
+    krew
+    cmctl
     doctl
   ];
 
