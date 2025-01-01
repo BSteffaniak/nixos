@@ -237,6 +237,7 @@
     packages = with pkgs; [
       signal-desktop
       telegram-desktop
+      discord
     ];
   };
 
