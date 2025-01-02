@@ -21,6 +21,7 @@
     users = {
       "braden" = import ./home.nix;
     };
+    useGlobalPkgs = true;
   };
 
   # Booloader
