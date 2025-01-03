@@ -1,7 +1,3 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 {
   config,
   pkgs,
@@ -11,7 +7,6 @@
 
 {
   imports = [
-    # Include the results of the hardware scan.
     ./hardware-configuration.nix
     inputs.home-manager.nixosModules.default
   ];
@@ -24,18 +19,25 @@
     useGlobalPkgs = true;
   };
 
-  # Booloader
-  # boot = {
-  #   kernelModules = [ "wl" ];
-  #   initrd = {
-  #     kernelModules = [ "nvidia" ];
-  #   };
-  #   kernelPackages = pkgs.linuxPackages_latest;
-  #   extraModulePackages = with config.boot.kernelPackages; [
-  #       nvidia_x11
-  #       broadcom_sta
-  #   ];
-  # };
+  # Bootloader.
+  boot = {
+    kernelPackages = pkgs.linuxPackages_latest;
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+    extraModulePackages = [ config.boot.kernelPackages.broadcom_sta ];
+    kernelModules = [ "wl" ]; # set of kernel modules loaded in second stage of boot process
+    initrd.kernelModules = [ "wl" ]; # list of modules always loaded by the initrd
+    binfmt.registrations.appimage = {
+      wrapInterpreterInShell = false;
+      interpreter = "${pkgs.appimage-run}/bin/appimage-run";
+      recognitionType = "magic";
+      offset = 0;
+      mask = ''\xff\xff\xff\xff\x00\x00\x00\x00\xff\xff\xff'';
+      magicOrExtension = ''\x7fELF....AI\x02'';
+    };
+  };
 
   nix = {
     package = pkgs.nix;
@@ -76,7 +78,6 @@
         libvdpau-va-gl
       ];
       extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
-      # setLdLibraryPath = true;
     };
     nvidia = {
       modesetting.enable = true;
@@ -134,11 +135,6 @@
   nixpkgs = {
     config = {
       allowUnfree = true;
-      # packageOverrides = pkgs: {
-      # 	unstable = import unstableTarball {
-      #     config = config.nixpkgs.config;
-      #   };
-      # };
     };
   };
 
@@ -161,14 +157,6 @@
     GTK_USE_PORTAL = "1";
     NIXOS_XDG_OPEN_USE_PORTAL = "1";
   };
-
-  # Bootloader.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.extraModulePackages = [ config.boot.kernelPackages.broadcom_sta ];
-  boot.kernelModules = [ "wl" ]; # set of kernel modules loaded in second stage of boot process
-  boot.initrd.kernelModules = [ "wl" ]; # list of modules always loaded by the initrd
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -347,15 +335,6 @@
 
   systemd.user.services.tmux = {
     enable = false;
-  };
-
-  boot.binfmt.registrations.appimage = {
-    wrapInterpreterInShell = false;
-    interpreter = "${pkgs.appimage-run}/bin/appimage-run";
-    recognitionType = "magic";
-    offset = 0;
-    mask = ''\xff\xff\xff\xff\x00\x00\x00\x00\xff\xff\xff'';
-    magicOrExtension = ''\x7fELF....AI\x02'';
   };
 
   virtualisation.docker = {
@@ -552,5 +531,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.11"; # Did you read the comment?
-
 }
