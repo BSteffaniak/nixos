@@ -383,6 +383,7 @@
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [
+      config.services.grafana.settings.server.http_port
       8000
     ];
   };
@@ -393,7 +394,7 @@
       analytics.reporting_enabled = false;
       server = {
         http_port = 2342;
-        http_addr = "127.0.0.1";
+        http_addr = "0.0.0.0";
       };
     };
 
