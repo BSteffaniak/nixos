@@ -398,6 +398,55 @@
     };
   };
 
+  services.tempo = {
+    enable = true;
+    settings = {
+      server = {
+        http_listen_port = 9005;
+        http_listen_address = "127.0.0.1";
+        grpc_listen_port = 9006;
+        grpc_listen_address = "127.0.0.1";
+      };
+      ingester = {
+        max_block_duration = "10m";
+      };
+      compactor = {
+        compaction = {
+          block_retention = "24h";
+        };
+      };
+
+      metrics_generator = {
+        registry = {
+          external_labels = {
+            source = "tempo";
+            cluster = "docker-compose";
+          };
+        };
+        storage = {
+          path = "/tmp/tempo/generator/wal";
+          remote_write = [
+            {
+              url = "http://127.0.0.1:${toString config.services.prometheus.port}/api/v1/write";
+              send_exemplars = true;
+            }
+          ];
+        };
+      };
+      storage = {
+        trace = {
+          backend = "local";
+          wal = {
+            path = "/tmp/tempo/wal";
+          };
+          local = {
+            path = "/tmp/tempo/blocks";
+          };
+        };
+      };
+    };
+  };
+
   services.prometheus = {
     enable = true;
     port = 9001;
