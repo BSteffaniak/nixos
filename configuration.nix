@@ -409,6 +409,7 @@
     };
     scrapeConfigs = [
       {
+        scrape_interval = "2s";
         job_name = "braden";
         static_configs = [
           {
