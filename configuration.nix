@@ -394,6 +394,12 @@
           access = "proxy";
           url = "http://127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}";
         }
+        {
+          name = "Tempo";
+          type = "tempo";
+          access = "proxy";
+          url = "http://127.0.0.1:${toString config.services.tempo.settings.server.http_listen_port}";
+        }
       ];
     };
   };
