@@ -291,6 +291,7 @@
     htop
     fzf
     ripgrep
+    lsof
     nemo
     gnome-tweaks
     steam
