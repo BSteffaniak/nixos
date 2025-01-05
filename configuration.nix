@@ -422,6 +422,21 @@
         };
       };
 
+      distributor = {
+        receivers = {
+          otlp = {
+            protocols = {
+              http = {
+                endpoint = "0.0.0.0:4318";
+              };
+              grpc = {
+                endpoint = "0.0.0.0:4317";
+              };
+            };
+          };
+        };
+      };
+
       metrics_generator = {
         registry = {
           external_labels = {
