@@ -488,6 +488,15 @@
           }
         ];
       }
+      {
+        scrape_interval = "2s";
+        job_name = "moosicbox_server";
+        static_configs = [
+          {
+            targets = [ "127.0.0.1:8000" ];
+          }
+        ];
+      }
     ];
   };
 
