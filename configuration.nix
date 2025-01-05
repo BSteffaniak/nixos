@@ -279,7 +279,7 @@
     nwg-displays
     git
     rustup
-    neovim
+    inputs.neovim-nightly-overlay.packages."${pkgs.system}".default
     nodejs_22
     pnpm
     go
