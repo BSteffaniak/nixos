@@ -278,6 +278,8 @@
     adwaita-qt6
     nwg-displays
     git
+    gh
+    lazygit
     rustup
     inputs.neovim-nightly-overlay.packages."${pkgs.system}".default
     nodejs_22
@@ -287,7 +289,6 @@
     nix-search
     unzip
     tmux
-    lazygit
     htop
     fzf
     ripgrep
