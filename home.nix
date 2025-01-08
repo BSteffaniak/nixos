@@ -63,6 +63,10 @@
 
       [Unit]
     '';
+
+    ".npmrc".text = ''
+      prefix=~/.npm-packages
+    '';
   };
 
   # Home Manager can also manage your environment variables through
