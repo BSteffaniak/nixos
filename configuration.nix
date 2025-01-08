@@ -264,6 +264,7 @@
     swaylock
     xdg-desktop-portal-hyprland
     hyprpaper
+    waypaper
     fuzzel
     wofi
     swww
