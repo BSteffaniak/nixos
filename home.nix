@@ -54,6 +54,15 @@
     #   org.gradle.console=verbose
     #   org.gradle.daemon.idletimeout=3600000
     # '';
+
+    ".config/systemd/user/tmux.service.d/override.conf".text = ''
+      [Install]
+
+      [Service]
+      ExecStart=
+
+      [Unit]
+    '';
   };
 
   # Home Manager can also manage your environment variables through
