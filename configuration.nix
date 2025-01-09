@@ -269,7 +269,7 @@
     waypaper
     fuzzel
     wofi
-    swww
+    inputs.swww.packages."${pkgs.system}".default
     grim
     xdg-utils
     xdg-desktop-portal
