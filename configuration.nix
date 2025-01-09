@@ -299,7 +299,6 @@
     lsof
     nemo
     gnome-tweaks
-    steam
     xclip
     lshw
     pciutils
