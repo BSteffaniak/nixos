@@ -70,6 +70,26 @@
     ".npmrc".text = ''
       prefix=~/.npm-packages
     '';
+
+    # ".config/gtk-3.0/settings.ini" = {
+    #   text = ''
+    #     # gtk-3.0
+    #     [Settings]
+    #     gtk-application-prefer-dark-theme=1
+    #     gtk-cursor-theme-name=Bibata-Modern-Classic
+    #   '';
+    #   force = true;
+    # };
+
+    # ".config/gtk-4.0/settings.ini" = {
+    #   text = ''
+    #     # gtk-4.0
+    #     [Settings]
+    #     gtk-application-prefer-dark-theme=1
+    #     gtk-cursor-theme-name=Bibata-Modern-Classic
+    #   '';
+    #   force = true;
+    # };
   };
 
   # Home Manager can also manage your environment variables through
@@ -111,6 +131,37 @@
     enable = true;
     userName = "Braden Steffaniak";
     userEmail = "BradenSteffaniak@gmail.com";
+  };
+
+  gtk = {
+    enable = true;
+    font.name = "TeX Gyre Adventor";
+    font.size = 10;
+    theme = {
+      name = "Juno";
+      package = pkgs.juno-theme;
+    };
+
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.papirus-icon-theme;
+    };
+
+    cursorTheme = {
+      name = "Bibata-Modern-Classic";
+      package = pkgs.bibata-cursors;
+    };
+
+    gtk3.extraConfig = {
+      "gtk-application-prefer-dark-theme" = 1;
+      "gtk-cursor-theme-name" = "Bibata-Modern-Classic";
+    };
+
+    gtk4.extraConfig = {
+      "gtk-application-prefer-dark-theme" = 1;
+      "gtk-cursor-theme-name" = "Bibata-Modern-Classic";
+    };
+
   };
 
 }
