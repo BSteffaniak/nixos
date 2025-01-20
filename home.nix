@@ -125,6 +125,9 @@
     enable = true;
     bashrcExtra = ''
       . ~/.rc-files/env.sh
+
+      # Flat
+      . ~/.flat/env
     '';
   };
 
