@@ -285,6 +285,9 @@
     lazygit
     rustup
     cargo-nextest
+    cargo-lambda
+    aws-sam-cli
+    zig
     inputs.neovim-nightly-overlay.packages."${pkgs.system}".default
     nodejs_22
     pnpm
