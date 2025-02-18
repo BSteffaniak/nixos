@@ -26,9 +26,9 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    extraModulePackages = [ config.boot.kernelPackages.broadcom_sta ];
-    kernelModules = [ "wl" ]; # set of kernel modules loaded in second stage of boot process
-    initrd.kernelModules = [ "wl" ]; # list of modules always loaded by the initrd
+    extraModulePackages = [ ];
+    kernelModules = [ ]; # set of kernel modules loaded in second stage of boot process
+    initrd.kernelModules = [ ]; # list of modules always loaded by the initrd
     binfmt.registrations.appimage = {
       wrapInterpreterInShell = false;
       interpreter = "${pkgs.appimage-run}/bin/appimage-run";
