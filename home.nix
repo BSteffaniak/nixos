@@ -29,6 +29,7 @@
     watchexec
     gh-dash
     android-studio
+    fd
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
