@@ -318,7 +318,6 @@
     nixfmt-rfc-style
     inputs.wezterm.packages."${pkgs.system}".default
     inputs.ra-multiplex.packages."${pkgs.system}".default
-    inputs.openapi-tui.packages.${pkgs.system}.openapi-tui
     ncdu
     appimage-run
     clang
