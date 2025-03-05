@@ -5,6 +5,7 @@
     ra-multiplex.url = "github:pr2502/ra-multiplex";
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     swww.url = "github:LGFae/swww";
+    openapi-tui.url = "github:zaghaghi/openapi-tui";
     home-manager = {
       url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
