@@ -376,6 +376,7 @@
     allowedTCPPorts = [
       config.services.grafana.settings.server.http_port
       8000
+      8086
     ];
   };
 
