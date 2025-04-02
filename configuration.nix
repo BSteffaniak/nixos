@@ -19,6 +19,8 @@
     useGlobalPkgs = true;
   };
 
+  system.includeBuildDependencies = true;
+
   # Bootloader.
   boot = {
     kernelPackages = pkgs.linuxPackages_6_12;
