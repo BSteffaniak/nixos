@@ -293,7 +293,7 @@
     ollama
     bun
     inputs.neovim-nightly-overlay.packages."${pkgs.system}".default
-    nodejs-slim_22
+    nodePackages_latest.nodejs
     pnpm
     go
     python3
