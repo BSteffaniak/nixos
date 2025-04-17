@@ -294,7 +294,7 @@
     bun
     inputs.neovim-nightly-overlay.packages."${pkgs.system}".default
     nodePackages_latest.nodejs
-    pnpm
+    pnpm_10
     go
     python3
     nix-search
