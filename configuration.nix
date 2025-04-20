@@ -19,7 +19,7 @@
     useGlobalPkgs = true;
   };
 
-  system.includeBuildDependencies = true;
+  # system.includeBuildDependencies = true;
 
   # Bootloader.
   boot = {
