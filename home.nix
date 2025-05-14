@@ -38,6 +38,7 @@
     evtest
     stern
     unstable.codex
+    aider-chat
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
