@@ -79,9 +79,9 @@
       [Unit]
     '';
 
-    ".npmrc".text = ''
-      prefix=~/.npm-packages
-    '';
+    # ".npmrc".text = ''
+    #   prefix=~/.npm-packages
+    # '';
 
     # ".config/gtk-3.0/settings.ini" = {
     #   text = ''
