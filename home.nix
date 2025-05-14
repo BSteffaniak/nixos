@@ -1,5 +1,12 @@
 { pkgs, ... }:
 
+let
+  sessionVariables = {
+    # EDITOR = "emacs";
+    ANDROID_HOME = "${android.androidsdk}/libexec/android-sdk";
+    NDK_HOME = "${android.androidsdk}/libexec/android-sdk/ndk-bundle";
+  };
+in
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
@@ -121,9 +128,7 @@
   #
   #  /etc/profiles/per-user/braden/etc/profile.d/hm-session-vars.sh
   #
-  home.sessionVariables = {
-    # EDITOR = "emacs";
-  };
+  home.sessionVariables = sessionVariables;
 
   home.sessionPath = [
     "$HOME/.local/bin"
@@ -135,12 +140,14 @@
 
   programs.bash = {
     enable = true;
-    bashrcExtra = ''
+    initExtra = ''
+      . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
       . ~/.rc-files/env.sh
 
       # Flat
       . ~/.flat/env
     '';
+    sessionVariables = sessionVariables;
   };
 
   programs.git = {
