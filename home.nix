@@ -48,6 +48,7 @@ in
     unstable.codex
     aider-chat
     android.androidsdk
+    unstable.ghostty
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
