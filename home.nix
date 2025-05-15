@@ -1,6 +1,7 @@
 { pkgs, ... }:
 
 let
+  android = import ./android.nix { inherit pkgs; };
   sessionVariables = {
     # EDITOR = "emacs";
     ANDROID_HOME = "${android.androidsdk}/libexec/android-sdk";
@@ -46,6 +47,7 @@ in
     stern
     unstable.codex
     aider-chat
+    android.androidsdk
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello

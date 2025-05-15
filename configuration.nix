@@ -5,6 +5,9 @@
   ...
 }:
 
+let
+  android = import ./android.nix { inherit pkgs; };
+in
 {
   imports = [
     ./hardware-configuration.nix
@@ -137,6 +140,7 @@
   nixpkgs = {
     config = {
       allowUnfree = true;
+      android_sdk.accept_license = true;
     };
   };
 
@@ -337,6 +341,7 @@
     lazydocker
     nethogs
     pavucontrol
+    android.androidsdk
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
