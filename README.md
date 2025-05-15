@@ -2,12 +2,14 @@
 
 ## How to apply changes
 
-`sudo cp ./* /etc/nixos/ && sudo nixos-rebuild switch`
+`./rebuild.sh`
+
+## How to upgrade packages
+
+`./rebuild.sh --upgrade`
 
 ## How to update flake
 
 `nix flake update`
 
-## How to upgrade packages
-
-`sudo cp ./* /etc/nixos/ && sudo nixos-rebuild switch --upgrade`
+** Will require rebuild after updating to apply changes. **
