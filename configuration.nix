@@ -342,6 +342,7 @@ in
     nethogs
     pavucontrol
     android.androidsdk
+    acpi
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
