@@ -45,7 +45,6 @@ in
     libinput
     evtest
     stern
-    unstable.codex
     aider-chat
     android.androidsdk
     unstable.ghostty
