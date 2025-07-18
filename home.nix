@@ -52,8 +52,6 @@ in
     opentofu
     mediainfo
     flac
-    rustdesk
-    rustdesk-server
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
