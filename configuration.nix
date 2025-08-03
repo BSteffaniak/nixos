@@ -295,7 +295,6 @@ in
     aws-sam-cli
     zig
     ollama
-    bun
     inputs.neovim-nightly-overlay.packages."${pkgs.system}".default
     nodePackages_latest.nodejs
     pnpm_10
