@@ -342,6 +342,8 @@ in
     pavucontrol
     android.androidsdk
     acpi
+    xsel
+    zip
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
