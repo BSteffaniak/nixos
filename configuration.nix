@@ -26,7 +26,7 @@ in
 
   # Bootloader.
   boot = {
-    kernelPackages = pkgs.unstable.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages; # _latest;
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
