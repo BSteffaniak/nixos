@@ -30,6 +30,7 @@ in
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
+      grub.configurationLimit = 5;
     };
     extraModulePackages = [ ];
     kernelModules = [ ]; # set of kernel modules loaded in second stage of boot process
