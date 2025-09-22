@@ -331,7 +331,6 @@ in
     appimage-run
     clang
     jq
-    okular
     glib
     inputs.home-manager.packages."${pkgs.system}".default
     awscli2
