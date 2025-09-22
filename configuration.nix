@@ -322,7 +322,7 @@ in
     eslint_d
     prettierd
     nixfmt-rfc-style
-    inputs.ra-multiplex.packages."${pkgs.system}".default
+    ra-multiplex-latest
     ncdu
     appimage-run
     clang
