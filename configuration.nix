@@ -322,7 +322,6 @@ in
     eslint_d
     prettierd
     nixfmt-rfc-style
-    inputs.wezterm.packages."${pkgs.system}".default
     inputs.ra-multiplex.packages."${pkgs.system}".default
     ncdu
     appimage-run
