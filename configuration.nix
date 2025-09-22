@@ -7,12 +7,16 @@
 
 let
   android = import ./android.nix { inherit pkgs; };
+  minecraft = import ./minecraft.nix { inherit pkgs; };
 in
 {
   imports = [
     ./hardware-configuration.nix
     inputs.home-manager.nixosModules.default
+    inputs.nix-minecraft.nixosModules.minecraft-servers
   ];
+
+  nixpkgs.overlays = [ inputs.nix-minecraft.overlay ];
 
   home-manager = {
     extraSpecialArgs = { inherit inputs; };
@@ -628,6 +632,45 @@ in
       ];
     };
   };
+
+  services.minecraft-servers = {
+    enable = true;
+    eula = true;
+    openFirewall = true;
+    servers = {
+      greenfield = {
+        enable = true;
+        autoStart = false;
+
+        # Use Paper server
+        package = pkgs.paperServers.paper;
+
+        serverProperties = {
+          server-port = 25565;
+          max-players = 20;
+          view-distance = 10;
+          simulation-distance = 10;
+          enable-command-block = true;
+          motd = "Greenfield - Java & Bedrock Crossplay";
+          # resource-pack = "/home/braden/greenfield/Greenfield.Texture.Pack.1.17.zip";
+          resource-pack-required = true;
+        };
+
+        whitelist = {
+          # Your whitelist entries here
+        };
+
+        symlinks = {
+          "plugins/GeyserMC.jar" = minecraft.geyserMC;
+          "plugins/Floodgate.jar" = minecraft.floodgate;
+          "plugins/ViaVersion.jar" = minecraft.viaVersion;
+        };
+      };
+    };
+  };
+
+  # Open Bedrock port
+  networking.firewall.allowedUDPPorts = [ 19132 ];
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
