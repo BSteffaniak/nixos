@@ -48,7 +48,6 @@ in
     aider-chat
     android.androidsdk
     unstable.ghostty
-    unstable.code-cursor
     opentofu
     mediainfo
     flac
