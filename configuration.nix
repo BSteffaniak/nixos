@@ -347,6 +347,7 @@ in
     acpi
     xsel
     zip
+    write-good
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
