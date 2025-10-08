@@ -348,6 +348,7 @@ in
     xsel
     zip
     write-good
+    zellij
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
