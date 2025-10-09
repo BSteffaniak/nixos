@@ -350,6 +350,7 @@ in
     write-good
     zellij
     libopus
+    fish
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
