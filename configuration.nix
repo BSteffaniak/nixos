@@ -121,6 +121,7 @@ in
   };
 
   programs = {
+    fish.enable = true;
     hyprland = {
       enable = true;
       xwayland = {
@@ -231,6 +232,7 @@ in
   users.users.braden = {
     isNormalUser = true;
     description = "Braden Steffaniak";
+    shell = pkgs.fish;
     extraGroups = [
       "networkmanager"
       "wheel"
@@ -350,7 +352,6 @@ in
     write-good
     zellij
     libopus
-    fish
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
