@@ -396,6 +396,7 @@ in
     allowedTCPPorts = [
       config.services.grafana.settings.server.http_port
       3000
+      3131
       8000
       8086
       8343
