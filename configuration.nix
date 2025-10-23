@@ -245,6 +245,8 @@ in
     ];
   };
 
+  users.defaultUserShell = pkgs.fish;
+
   fonts = {
     packages = with pkgs; [
       font-awesome
