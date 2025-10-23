@@ -53,6 +53,7 @@ in
     flac
     unstable.bun
     unstable.opencode
+    unstable.claude-code
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
