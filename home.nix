@@ -55,6 +55,7 @@ in
     unstable.opencode
     unstable.claude-code
     ffmpeg
+    taplo
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
