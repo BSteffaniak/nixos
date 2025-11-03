@@ -62,7 +62,7 @@
             home-manager.darwinModules.home-manager
             nix-homebrew.darwinModules.nix-homebrew
             {
-              nixpkgs.overlays = import ./overlays.nix { 
+              nixpkgs.overlays = import ./overlays.nix {
                 inherit nixpkgs-unstable;
                 ra-multiplex-src = inputs.ra-multiplex;
               };
@@ -108,7 +108,7 @@
             home-manager.darwinModules.home-manager
             nix-homebrew.darwinModules.nix-homebrew
             {
-              nixpkgs.overlays = import ./overlays.nix { 
+              nixpkgs.overlays = import ./overlays.nix {
                 inherit nixpkgs-unstable;
                 ra-multiplex-src = inputs.ra-multiplex;
               };
