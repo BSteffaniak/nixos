@@ -38,6 +38,7 @@ with lib;
       clang
       glib
       ra-multiplex-latest
+      nvd
     ];
   };
 }
