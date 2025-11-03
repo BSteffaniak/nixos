@@ -52,7 +52,7 @@ in
     mediainfo
     flac
     unstable.bun
-    unstable.opencode
+    # unstable.opencode
     unstable.claude-code
     ffmpeg
     taplo
