@@ -21,9 +21,7 @@ with lib;
       # System monitoring
       htop
       bottom
-      nethogs
       ncdu
-      bandwhich
 
       # File management
       fzf

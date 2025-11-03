@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  osConfig,
   ...
 }:
 
@@ -10,8 +11,8 @@
     ../common
   ];
 
-  home.username = "braden";
-  home.homeDirectory = "/Users/braden";
+  home.username = osConfig.myConfig.username;
+  home.homeDirectory = lib.mkForce "/Users/${osConfig.myConfig.username}";
   home.stateVersion = "24.11";
 
   # Darwin-specific packages

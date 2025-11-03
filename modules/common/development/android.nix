@@ -50,7 +50,7 @@ in
       android.androidsdk
     ];
 
-    environment.sessionVariables = {
+    environment.variables = {
       ANDROID_HOME = "${android.androidsdk}/libexec/android-sdk";
       NDK_HOME = "${android.androidsdk}/libexec/android-sdk/ndk-bundle";
     };

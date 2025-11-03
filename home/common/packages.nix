@@ -6,45 +6,38 @@
 }:
 
 {
-  home.packages = with pkgs; [
-    # Gaming
-    prismlauncher
+  home.packages =
+    with pkgs;
+    [
+      # Password management
+      bitwarden-desktop
 
-    # Password management
-    bitwarden-desktop
+      # Development tools
+      gh-dash
+      natscli
+      aider-chat
 
-    # Screenshot tools
-    hyprshot
+      # Cloud tools
+      unstable.flyctl
 
-    # Calculator
-    qalculate-gtk
+      # Media tools
+      mediainfo
+      flac
 
-    # Music players
-    libsForQt5.vvave
-    kdePackages.elisa
-
-    # Development tools
-    gh-dash
-    android-studio
-    natscli
-    aider-chat
-
-    # Terminal emulator
-    unstable.ghostty
-
-    # Cloud tools
-    unstable.flyctl
-
-    # Utilities
-    brightnessctl
-    libinput
-    evtest
-
-    # Media tools
-    mediainfo
-    flac
-
-    # Code tools
-    unstable.claude-code
-  ];
+      # Code tools
+      unstable.claude-code
+    ]
+    ++ lib.optionals pkgs.stdenv.isLinux [
+      # Linux-only packages
+      unstable.ghostty
+      hyprshot
+      brightnessctl
+      libinput
+      evtest
+      prismlauncher
+      qalculate-gtk
+      libsForQt5.vvave
+      kdePackages.elisa
+      android-studio
+    ];
 }

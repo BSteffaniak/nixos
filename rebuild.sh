@@ -17,12 +17,12 @@ case $HOST in
     ;;
   "Bradens-MacBook-Air")
     FLAKE_PATH="$SCRIPT_DIR/darwin#macbook-air"
-    REBUILD_CMD="darwin-rebuild"
+    REBUILD_CMD="sudo darwin-rebuild"
     PLATFORM="Darwin"
     ;;
-  "Bradens-Mac-Mini")
+  "BradensacStudio.home")
     FLAKE_PATH="$SCRIPT_DIR/darwin#mac-mini"
-    REBUILD_CMD="darwin-rebuild"
+    REBUILD_CMD="sudo darwin-rebuild"
     PLATFORM="Darwin"
     ;;
   *)

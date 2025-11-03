@@ -51,6 +51,7 @@
 
     # CLI tools
     cliTools.enable = true;
+    nixos.cliTools.enable = true;
 
     # Services
     services.docker.enable = true;

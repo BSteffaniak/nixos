@@ -14,7 +14,7 @@
 
   # Host-specific settings
   myConfig = {
-    username = "braden";
+    username = "bsteffaniak";
     fullName = "Braden Steffaniak";
 
     # Development tools
@@ -45,7 +45,7 @@
   networking.computerName = "Braden's Mac Mini";
 
   # User configuration
-  system.primaryUser = "braden";
+  system.primaryUser = "bsteffaniak";
 
   # System version
   system.stateVersion = 6;

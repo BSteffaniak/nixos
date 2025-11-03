@@ -57,37 +57,35 @@
             home-manager.darwinModules.home-manager
             nix-homebrew.darwinModules.nix-homebrew
             {
-              nixpkgs.overlays = [
-                (final: prev: {
-                  unstable = import nixpkgs-unstable {
-                    inherit (prev) system;
-                    config.allowUnfree = true;
-                  };
-                })
-              ];
-
-              nix-homebrew = {
-                enable = true;
-                enableRosetta = true;
-                user = "braden";
-                taps = {
-                  "homebrew/homebrew-core" = homebrew-core;
-                  "homebrew/homebrew-cask" = homebrew-cask;
-                };
-                mutableTaps = false;
-              };
-
-              home-manager = {
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                users.braden = import ../home/darwin;
-                extraSpecialArgs = { inherit inputs; };
-              };
+              nixpkgs.overlays = import ./overlays.nix nixpkgs-unstable;
             }
-            # Align homebrew taps config with nix-homebrew
             (
               { config, ... }:
+              let
+                username = config.myConfig.username;
+              in
               {
+                nix-homebrew = {
+                  enable = true;
+                  enableRosetta = true;
+                  user = username;
+                  taps = {
+                    "homebrew/homebrew-core" = homebrew-core;
+                    "homebrew/homebrew-cask" = homebrew-cask;
+                  };
+                  mutableTaps = false;
+                };
+
+                home-manager = {
+                  useGlobalPkgs = true;
+                  useUserPackages = true;
+                  users.${username} = import ../home/darwin;
+                  extraSpecialArgs = {
+                    inherit inputs;
+                    osConfig = config;
+                  };
+                };
+
                 homebrew.taps = builtins.attrNames config.nix-homebrew.taps;
               }
             )
@@ -102,37 +100,35 @@
             home-manager.darwinModules.home-manager
             nix-homebrew.darwinModules.nix-homebrew
             {
-              nixpkgs.overlays = [
-                (final: prev: {
-                  unstable = import nixpkgs-unstable {
-                    inherit (prev) system;
-                    config.allowUnfree = true;
-                  };
-                })
-              ];
-
-              nix-homebrew = {
-                enable = true;
-                enableRosetta = true;
-                user = "braden";
-                taps = {
-                  "homebrew/homebrew-core" = homebrew-core;
-                  "homebrew/homebrew-cask" = homebrew-cask;
-                };
-                mutableTaps = false;
-              };
-
-              home-manager = {
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                users.braden = import ../home/darwin;
-                extraSpecialArgs = { inherit inputs; };
-              };
+              nixpkgs.overlays = import ./overlays.nix nixpkgs-unstable;
             }
-            # Align homebrew taps config with nix-homebrew
             (
               { config, ... }:
+              let
+                username = config.myConfig.username;
+              in
               {
+                nix-homebrew = {
+                  enable = true;
+                  enableRosetta = true;
+                  user = username;
+                  taps = {
+                    "homebrew/homebrew-core" = homebrew-core;
+                    "homebrew/homebrew-cask" = homebrew-cask;
+                  };
+                  mutableTaps = false;
+                };
+
+                home-manager = {
+                  useGlobalPkgs = true;
+                  useUserPackages = true;
+                  users.${username} = import ../home/darwin;
+                  extraSpecialArgs = {
+                    inherit inputs;
+                    osConfig = config;
+                  };
+                };
+
                 homebrew.taps = builtins.attrNames config.nix-homebrew.taps;
               }
             )

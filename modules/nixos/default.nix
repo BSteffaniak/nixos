@@ -12,6 +12,7 @@
     ./desktop
     ./services
     ./system
+    ./cli-tools.nix
   ];
 
   config = {
