@@ -29,7 +29,7 @@
           system = "x86_64-linux";
           specialArgs = { inherit inputs; };
           modules = [
-            ./hosts/nixos-desktop
+            ../hosts/nixos-desktop
             home-manager.nixosModules.home-manager
             {
               nixpkgs.overlays = [
@@ -60,7 +60,7 @@
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
-                users.braden = import ./home/nixos;
+                users.braden = import ../home/nixos;
                 extraSpecialArgs = { inherit inputs; };
               };
             }

@@ -53,7 +53,7 @@
           system = "aarch64-darwin";
           specialArgs = { inherit inputs; };
           modules = [
-            ./hosts/macbook-air
+            ../hosts/macbook-air
             home-manager.darwinModules.home-manager
             nix-homebrew.darwinModules.nix-homebrew
             {
@@ -80,7 +80,7 @@
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
-                users.braden = import ./home/darwin;
+                users.braden = import ../home/darwin;
                 extraSpecialArgs = { inherit inputs; };
               };
             }
@@ -98,7 +98,7 @@
           system = "aarch64-darwin"; # Change to "x86_64-darwin" if Intel
           specialArgs = { inherit inputs; };
           modules = [
-            ./hosts/mac-mini
+            ../hosts/mac-mini
             home-manager.darwinModules.home-manager
             nix-homebrew.darwinModules.nix-homebrew
             {
@@ -125,7 +125,7 @@
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
-                users.braden = import ./home/darwin;
+                users.braden = import ../home/darwin;
                 extraSpecialArgs = { inherit inputs; };
               };
             }

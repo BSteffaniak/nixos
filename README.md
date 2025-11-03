@@ -4,10 +4,10 @@ Modular, cross-platform Nix configuration supporting NixOS and macOS (nix-darwin
 
 ## Split Flake Design
 
-This repository uses **two separate flakes** to optimize dependencies:
+This repository uses **two separate flakes** in subdirectories to optimize dependencies:
 
-- **`flake.nix`** - NixOS configurations only (no Darwin/Homebrew dependencies)
-- **`flake-darwin.nix`** - macOS (Darwin) configurations with Homebrew integration
+- **`nixos/flake.nix`** - NixOS configurations only (no Darwin/Homebrew dependencies)
+- **`darwin/flake.nix`** - macOS (Darwin) configurations with Homebrew integration
 
 This ensures that building NixOS configurations doesn't download unnecessary Darwin-specific inputs like Homebrew repositories.
 
@@ -15,10 +15,14 @@ This ensures that building NixOS configurations doesn't download unnecessary Dar
 
 ```
 .
-├── flake.nix                 # NixOS flake (no Darwin dependencies)
-├── flake-darwin.nix         # Darwin flake (with Homebrew)
-├── flake.lock               # NixOS locked dependencies
-├── flake-darwin.lock        # Darwin locked dependencies (when generated)
+├── nixos/
+│   ├── flake.nix            # NixOS flake (no Darwin dependencies)
+│   └── flake.lock           # NixOS locked dependencies
+│
+├── darwin/
+│   ├── flake.nix            # Darwin flake (with Homebrew)
+│   └── flake.lock           # Darwin locked dependencies
+│
 ├── rebuild.sh               # Auto-detecting rebuild script (chooses correct flake)
 │
 ├── hosts/                   # Per-machine configurations
@@ -62,8 +66,8 @@ The `rebuild.sh` script automatically detects your platform and uses the correct
 # Auto-detect and rebuild
 ./rebuild.sh
 
-# On NixOS: uses flake.nix#nixos-desktop
-# On Darwin: uses flake-darwin.nix#macbook-air or mac-mini
+# On NixOS: uses nixos#nixos-desktop
+# On Darwin: uses darwin#macbook-air or mac-mini
 ```
 
 ### Manual Usage
@@ -72,23 +76,23 @@ The `rebuild.sh` script automatically detects your platform and uses the correct
 
 ```bash
 # Build without applying
-sudo nixos-rebuild build --flake .#nixos-desktop
+sudo nixos-rebuild build --flake ./nixos#nixos-desktop
 
 # Apply configuration
-sudo nixos-rebuild switch --flake .#nixos-desktop
+sudo nixos-rebuild switch --flake ./nixos#nixos-desktop
 
 # Boot into new config (safer)
-sudo nixos-rebuild boot --flake .#nixos-desktop
+sudo nixos-rebuild boot --flake ./nixos#nixos-desktop
 ```
 
 **macOS (Darwin):**
 
 ```bash
 # Build without applying
-darwin-rebuild build --flake ./flake-darwin.nix#macbook-air
+darwin-rebuild build --flake ./darwin#macbook-air
 
 # Apply configuration
-darwin-rebuild switch --flake ./flake-darwin.nix#macbook-air
+darwin-rebuild switch --flake ./darwin#macbook-air
 ```
 
 ## Available Hosts
@@ -219,9 +223,9 @@ Understanding where to add packages based on their purpose and scope:
 1. Rebuild to test:
 
    ```bash
-   sudo nixos-rebuild build --flake .#nixos-desktop  # NixOS
+   sudo nixos-rebuild build --flake ./nixos#nixos-desktop  # NixOS
    # or
-   darwin-rebuild build --flake ./flake-darwin.nix#macbook-air  # Darwin
+   darwin-rebuild build --flake ./darwin#macbook-air  # Darwin
    ```
 
 2. Compare what changed:
@@ -240,9 +244,9 @@ Understanding where to add packages based on their purpose and scope:
 1. Create a new directory in `hosts/` (e.g., `hosts/new-laptop/`)
 2. Create `hosts/new-laptop/default.nix` based on existing examples
 3. Add the host to the appropriate flake:
-   - For NixOS: Edit `flake.nix` and add to `nixosConfigurations`
-   - For Darwin: Edit `flake-darwin.nix` and add to `darwinConfigurations`
-4. Update `rebuild.sh` to recognize the new hostname and point to correct flake
+   - For NixOS: Edit `nixos/flake.nix` and add to `nixosConfigurations`
+   - For Darwin: Edit `darwin/flake.nix` and add to `darwinConfigurations`
+4. Update `rebuild.sh` to recognize the new hostname and point to correct flake directory
 
 ## Module System
 
@@ -262,16 +266,20 @@ This allows sharing development tools, shell configurations, and CLI utilities a
 
 ## Updating
 
+**NixOS:**
 ```bash
-# Update NixOS flake inputs
-nix flake update
+cd nixos
+nix flake update                           # Update all inputs
+nix flake lock --update-input nixpkgs     # Update specific input
+cd ..
+./rebuild.sh
+```
 
-# Update Darwin flake inputs
-nix flake update --flake ./flake-darwin.nix
-
-# Update specific input (example for NixOS)
-nix flake lock --update-input nixpkgs
-
-# Rebuild with updated inputs
+**Darwin:**
+```bash
+cd darwin
+nix flake update                           # Update all inputs
+nix flake lock --update-input nixpkgs-darwin  # Update specific input
+cd ..
 ./rebuild.sh
 ```

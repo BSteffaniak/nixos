@@ -11,17 +11,17 @@ HOST=$(hostname)
 
 case $HOST in
   "nixos")
-    FLAKE_PATH="$SCRIPT_DIR#nixos-desktop"
+    FLAKE_PATH="$SCRIPT_DIR/nixos#nixos-desktop"
     REBUILD_CMD="sudo nixos-rebuild"
     PLATFORM="NixOS"
     ;;
   "Bradens-MacBook-Air")
-    FLAKE_PATH="$SCRIPT_DIR/flake-darwin.nix#macbook-air"
+    FLAKE_PATH="$SCRIPT_DIR/darwin#macbook-air"
     REBUILD_CMD="darwin-rebuild"
     PLATFORM="Darwin"
     ;;
   "Bradens-Mac-Mini")
-    FLAKE_PATH="$SCRIPT_DIR/flake-darwin.nix#mac-mini"
+    FLAKE_PATH="$SCRIPT_DIR/darwin#mac-mini"
     REBUILD_CMD="darwin-rebuild"
     PLATFORM="Darwin"
     ;;
@@ -29,9 +29,9 @@ case $HOST in
     echo "Unknown host: $HOST"
     echo "Please manually specify the flake target"
     echo "Available targets:"
-    echo "  NixOS: flake.nix#nixos-desktop"
-    echo "  Darwin: flake-darwin.nix#macbook-air"
-    echo "  Darwin: flake-darwin.nix#mac-mini"
+    echo "  NixOS: nixos#nixos-desktop"
+    echo "  Darwin: darwin#macbook-air"
+    echo "  Darwin: darwin#mac-mini"
     exit 1
     ;;
 esac
