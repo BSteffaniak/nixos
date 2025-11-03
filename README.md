@@ -118,6 +118,123 @@ myConfig = {
 };
 ```
 
+## Adding Packages
+
+Understanding where to add packages based on their purpose and scope:
+
+### Cross-Platform Packages (All Hosts)
+
+**System-Level CLI Tools:**
+
+- **Location:** `modules/common/cli-tools/default.nix`
+- **Use for:** Command-line utilities, system tools (tmux, fzf, ripgrep, htop, etc.)
+- **Example:**
+  ```nix
+  environment.systemPackages = with pkgs; [
+    # ... existing packages
+    yq  # Add new CLI tool here
+  ];
+  ```
+
+**Development Tools:**
+
+- **Location:** `modules/common/development/` (language-specific files)
+- **Use for:** Programming language toolchains, build tools, linters
+- **Example:** Add to `devops.nix` for infrastructure tools, or create new module
+  ```nix
+  # modules/common/development/devops.nix
+  environment.systemPackages = with pkgs; [
+    # ... existing packages
+    terraform  # Add new devops tool
+  ];
+  ```
+
+**User Applications (GUI/Desktop):**
+
+- **Location:** `home/common/packages.nix`
+- **Use for:** Personal applications, GUI tools, user-specific packages
+- **Scope:** Installed for your user across all platforms
+- **Example:**
+  ```nix
+  home.packages = with pkgs; [
+    # ... existing packages
+    spotify  # Add desktop app
+  ];
+  ```
+
+### Platform-Specific Packages
+
+**NixOS Only:**
+
+- **Location:** Appropriate module in `modules/nixos/*/`
+  - Desktop apps: `modules/nixos/desktop/*.nix`
+  - System services: `modules/nixos/services/*.nix`
+- **Example:**
+  ```nix
+  # modules/nixos/desktop/hyprland.nix
+  environment.systemPackages = with pkgs; [
+    # ... existing packages
+    waybar-experimental  # Add Wayland-specific tool
+  ];
+  ```
+
+**Darwin (macOS) Only:**
+
+- **Location:** `modules/darwin/*.nix` or `home/darwin/default.nix`
+- **Example:**
+  ```nix
+  # home/darwin/default.nix
+  home.packages = with pkgs; [
+    # ... existing packages
+    rectangle  # Add macOS-specific app
+  ];
+  ```
+
+**Single Host Only:**
+
+- **Location:** `hosts/<hostname>/default.nix`
+- **Use for:** Machine-specific packages (testing, hardware-specific tools)
+- **Example:**
+  ```nix
+  # hosts/nixos-desktop/default.nix
+  environment.systemPackages = with pkgs; [
+    inputs.home-manager.packages."${pkgs.system}".default
+    specialized-tool  # Only on this machine
+  ];
+  ```
+
+### Quick Decision Guide
+
+| I want to add...                    | Where?                                      |
+| ----------------------------------- | ------------------------------------------- |
+| CLI tool for all machines           | `modules/common/cli-tools/default.nix`      |
+| Language toolchain (rust, go, etc.) | `modules/common/development/<language>.nix` |
+| Desktop app for me (all platforms)  | `home/common/packages.nix`                  |
+| NixOS desktop tool                  | `modules/nixos/desktop/*.nix`               |
+| macOS-specific app                  | `home/darwin/default.nix`                   |
+| Testing on one machine only         | `hosts/<hostname>/default.nix`              |
+
+### After Adding Packages
+
+1. Rebuild to test:
+
+   ```bash
+   sudo nixos-rebuild build --flake .#nixos-desktop  # NixOS
+   # or
+   darwin-rebuild build --flake ./flake-darwin.nix#macbook-air  # Darwin
+   ```
+
+2. Compare what changed:
+
+   ```bash
+   nvd diff /run/current-system ./result
+   ```
+
+3. Apply if satisfied:
+   ```bash
+   ./rebuild.sh
+   ```
+
 ## Adding a New Host
 
 1. Create a new directory in `hosts/` (e.g., `hosts/new-laptop/`)
@@ -136,6 +253,12 @@ All modules use NixOS module system options for configurability:
 - **Darwin modules**: macOS-specific features
 
 This allows sharing development tools, shell configurations, and CLI utilities across all machines while keeping platform-specific features separate.
+
+### System vs User Packages
+
+- **System packages** (`environment.systemPackages`): Available to all users, included in system PATH
+- **User packages** (`home.packages`): Installed per-user via Home Manager, in user profile
+- **Rule of thumb**: System services/tools → system packages; personal apps → user packages
 
 ## Updating
 
