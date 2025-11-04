@@ -24,6 +24,7 @@
     development.python.enable = true;
     development.android.enable = false;
     development.devops.enable = true;
+    development.podman.enable = true;
     development.openssl.enable = true;
 
     # Shell and editors
