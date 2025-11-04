@@ -21,15 +21,18 @@
     development.rust.enable = true;
     development.nodejs.enable = true;
     development.go.enable = true;
-    development.python.enable = true;
-    development.android.enable = true;
+    development.python.enable = false;
+    development.android.enable = false;
     development.devops.enable = true;
+    development.podman.enable = true;
+    development.openssl.enable = true;
+    development.java.enable = true;
 
     # Shell and editors
     shell.fish.enable = true;
     shell.git.enable = true;
     editors.neovim.enable = true;
-    editors.neovim.useNightly = false;
+    editors.neovim.useNightly = true;
 
     # CLI tools
     cliTools.enable = true;
