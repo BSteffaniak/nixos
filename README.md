@@ -241,6 +241,45 @@ Understanding where to add packages based on their purpose and scope:
 
 ## Adding a New Host
 
+### Interactive Bootstrap (Recommended)
+
+Use the interactive bootstrap script to set up a new host configuration:
+
+```bash
+./bootstrap.sh
+```
+
+This script will:
+
+- Detect your platform (NixOS or Darwin) and architecture
+- Guide you through selecting which features to enable
+- Generate a complete host configuration in `hosts/<hostname>/default.nix`
+- For NixOS: copy or generate `hardware-configuration.nix`
+- Provide instructions for updating the appropriate flake
+- Update `rebuild.sh` to recognize the new hostname
+
+The bootstrap script asks about:
+
+- **Development tools**: Rust, Node.js, Go, Python, Java, Zig, Android SDK, DevOps tools
+- **Desktop environment** (NixOS only): Hyprland, Waybar, GTK, X Server
+- **Hardware support** (NixOS only): NVIDIA GPU, graphics, audio
+- **System services**: Docker, Podman, Minecraft server, observability
+- **Shell & editors**: Fish shell, Neovim (with optional nightly builds), Git config
+
+### Hardware Detection (NixOS)
+
+Before bootstrapping a NixOS host, you can run the hardware detection script:
+
+```bash
+./scripts/detect-hardware.sh
+```
+
+This will detect your CPU, GPU, audio, network hardware, and provide configuration suggestions.
+
+### Manual Setup
+
+If you prefer to set up a host manually:
+
 1. Create a new directory in `hosts/` (e.g., `hosts/new-laptop/`)
 2. Create `hosts/new-laptop/default.nix` based on existing examples
 3. Add the host to the appropriate flake:
@@ -284,4 +323,44 @@ nix flake update                           # Update all inputs
 nix flake lock --update-input nixpkgs-darwin  # Update specific input
 cd ..
 ./rebuild.sh
+```
+
+## Helper Scripts
+
+### `bootstrap.sh`
+
+Interactive script for creating new host configurations. Guides you through all configuration options and generates everything needed for a new host.
+
+**Usage:**
+
+```bash
+./bootstrap.sh
+```
+
+### `scripts/detect-hardware.sh`
+
+Detects hardware on NixOS systems and suggests appropriate configuration options. Identifies GPU (NVIDIA/AMD/Intel), CPU, audio hardware, network devices, Bluetooth, storage, and virtualization.
+
+**Usage:**
+
+```bash
+./scripts/detect-hardware.sh
+```
+
+### `scripts/new-host-template.sh`
+
+Template generator called by `bootstrap.sh`. Can be used standalone to generate host configurations programmatically.
+
+**Usage:**
+
+```bash
+./scripts/new-host-template.sh \
+  --platform nixos \
+  --hostname my-laptop \
+  --username myuser \
+  --fullname "My Name" \
+  --arch x86_64-linux \
+  --rust true \
+  --nodejs true
+  # ... (see bootstrap.sh for all options)
 ```
