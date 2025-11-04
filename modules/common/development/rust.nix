@@ -15,6 +15,7 @@ with lib;
   config = mkIf config.myConfig.development.rust.enable {
     environment.systemPackages = with pkgs; [
       rustup
+      cargo-binstall
       cargo-nextest
       cargo-lambda
     ];
