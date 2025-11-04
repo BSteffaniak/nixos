@@ -16,7 +16,7 @@ with lib;
     environment.systemPackages = with pkgs; [
       git
       gh
-      lazygit
+      unstable.lazygit
     ];
   };
 }
