@@ -18,6 +18,7 @@ with lib;
     ./devops.nix
     ./zig.nix
     ./openssl.nix
+    ./java.nix
   ];
 
   options.myConfig.development = {
