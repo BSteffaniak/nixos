@@ -399,6 +399,95 @@ This allows sharing development tools, shell configurations, and CLI utilities a
 - **User packages** (`home.packages`): Installed per-user via Home Manager, in user profile
 - **Rule of thumb**: System services/tools → system packages; personal apps → user packages
 
+## Home Manager Configuration
+
+Home Manager configurations are organized to be generic and reusable across hosts:
+
+```
+home/
+├── common/              # Shared cross-platform user config
+│   ├── git.nix         # Git configuration
+│   ├── shell.nix       # Shell setup
+│   └── packages.nix    # User packages
+├── modules/            # Optional home-manager modules
+│   └── gtk-theming.nix # GTK theming (opt-in)
+├── nixos/
+│   └── default.nix     # Generic NixOS home config
+└── darwin/
+    └── default.nix     # Generic Darwin home config
+```
+
+### Key Principles
+
+**Generic Base Configs:**
+- `home/nixos/default.nix` and `home/darwin/default.nix` are generic templates
+- They dynamically read username and settings from host configuration
+- No personal preferences or hardcoded values
+- Safe to use when bootstrapping new hosts
+
+**Personal Overrides:**
+- Create `hosts/<hostname>/home.nix` for host-specific home-manager config
+- Contains your personal preferences (themes, packages, etc.)
+- Not copied when bootstrapping new hosts
+
+**Example: Personal GTK Theming**
+
+Enable optional GTK theming in your host-specific home config:
+
+```nix
+# hosts/nixos-desktop/home.nix
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+
+{
+  # Enable GTK theming with personal preferences
+  homeModules.gtkTheming = {
+    enable = true;
+    theme = "Juno";
+    themePackage = pkgs.juno-theme;
+    iconTheme = "Papirus-Dark";
+    iconThemePackage = pkgs.papirus-icon-theme;
+    cursorTheme = "Bibata-Modern-Classic";
+    cursorThemePackage = pkgs.bibata-cursors;
+    font = {
+      name = "TeX Gyre Adventor";
+      size = 10;
+    };
+  };
+
+  # Personal packages
+  home.packages = with pkgs; [
+    steam
+  ];
+}
+```
+
+Then import it in your flake:
+
+```nix
+# nixos/flake.nix
+home-manager = {
+  useGlobalPkgs = true;
+  useUserPackages = true;
+  users.braden = {
+    imports = [
+      ../home/nixos          # Generic base config
+      ../hosts/nixos-desktop/home.nix  # Personal overrides
+    ];
+  };
+  extraSpecialArgs = {
+    inherit inputs;
+    osConfig = config;  # Pass system config to home-manager
+  };
+};
+```
+
+**Important:** Always pass `osConfig = config` in `extraSpecialArgs` so home-manager can read username and state version from the system configuration.
+
 ## Updating
 
 **NixOS:**

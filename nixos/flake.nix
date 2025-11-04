@@ -48,14 +48,26 @@
                 ra-multiplex-src = inputs.ra-multiplex;
                 rust-overlay = inputs.rust-overlay;
               });
-
-              home-manager = {
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                users.braden = import ../home/nixos;
-                extraSpecialArgs = { inherit inputs; };
-              };
             }
+            (
+              { config, ... }:
+              {
+                home-manager = {
+                  useGlobalPkgs = true;
+                  useUserPackages = true;
+                  users.braden = {
+                    imports = [
+                      ../home/nixos # Generic base config
+                      ../hosts/nixos-desktop/home.nix # Personal overrides
+                    ];
+                  };
+                  extraSpecialArgs = {
+                    inherit inputs;
+                    osConfig = config; # Pass system config to home-manager
+                  };
+                };
+              }
+            )
           ];
         };
       };

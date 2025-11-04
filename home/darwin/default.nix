@@ -9,11 +9,15 @@
 {
   imports = [
     ../common
+    ../modules
   ];
 
   home.username = osConfig.myConfig.username;
   home.homeDirectory = lib.mkForce "/Users/${osConfig.myConfig.username}";
-  home.stateVersion = "24.11";
+
+  # State version should match the Darwin release when home-manager was first used
+  # Darwin state version is an integer, convert from system config
+  home.stateVersion = builtins.toString osConfig.system.stateVersion;
 
   # Darwin-specific packages
   home.packages = with pkgs; [

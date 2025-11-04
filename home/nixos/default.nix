@@ -2,53 +2,28 @@
   config,
   lib,
   pkgs,
+  osConfig,
   ...
 }:
 
 {
   imports = [
     ../common
+    ../modules
   ];
 
-  home.username = "braden";
-  home.homeDirectory = "/home/braden";
-  home.stateVersion = "24.11";
+  # Dynamic configuration from host
+  home.username = osConfig.myConfig.username;
+  home.homeDirectory = "/home/${osConfig.myConfig.username}";
 
-  # NixOS-specific packages
+  # State version should match the NixOS release when home-manager was first used
+  # Read from host config
+  home.stateVersion = osConfig.system.stateVersion;
+
+  # NixOS-specific packages (minimal - just examples)
   home.packages = with pkgs; [
-    steam
+    # Add platform-specific packages here
   ];
-
-  # GTK configuration
-  gtk = {
-    enable = true;
-    font.name = "TeX Gyre Adventor";
-    font.size = 10;
-    theme = {
-      name = "Juno";
-      package = pkgs.juno-theme;
-    };
-
-    iconTheme = {
-      name = "Papirus-Dark";
-      package = pkgs.papirus-icon-theme;
-    };
-
-    cursorTheme = {
-      name = "Bibata-Modern-Classic";
-      package = pkgs.bibata-cursors;
-    };
-
-    gtk3.extraConfig = {
-      "gtk-application-prefer-dark-theme" = 1;
-      "gtk-cursor-theme-name" = "Bibata-Modern-Classic";
-    };
-
-    gtk4.extraConfig = {
-      "gtk-application-prefer-dark-theme" = 1;
-      "gtk-cursor-theme-name" = "Bibata-Modern-Classic";
-    };
-  };
 
   # NixOS-specific home files
   home.file = {
