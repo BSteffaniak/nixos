@@ -1,20 +1,5 @@
-{ nixpkgs-unstable, ra-multiplex-src }:
-[
-  (final: prev: {
-    unstable = import nixpkgs-unstable {
-      inherit (prev) system;
-      config.allowUnfree = true;
-    };
-  })
-
-  (final: prev: {
-    ra-multiplex-latest = final.rustPlatform.buildRustPackage {
-      pname = "ra-multiplex";
-      version = "unstable";
-
-      src = ra-multiplex-src;
-
-      cargoHash = "sha256-pwgNtxnO3oyX/w+tzRY5vAptw5JhpRhKCB2HYLEuA3A=";
-    };
-  })
-]
+{ nixpkgs-unstable, ra-multiplex-src, rust-overlay }:
+  # Import shared Rust overlay from lib/
+  (import ../lib/rust-overlay.nix { inherit rust-overlay; })
+  # Import common overlays from lib/
+  ++ (import ../lib/overlays.nix { inherit nixpkgs-unstable ra-multiplex-src; })

@@ -17,6 +17,11 @@
 
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
 
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs-darwin";
+    };
+
     # Darwin-specific inputs
     nix-homebrew = {
       url = "github:zhaofengli/nix-homebrew";
@@ -65,6 +70,7 @@
               nixpkgs.overlays = import ./overlays.nix {
                 inherit nixpkgs-unstable;
                 ra-multiplex-src = inputs.ra-multiplex;
+                rust-overlay = inputs.rust-overlay;
               };
             }
             (
@@ -111,6 +117,7 @@
               nixpkgs.overlays = import ./overlays.nix {
                 inherit nixpkgs-unstable;
                 ra-multiplex-src = inputs.ra-multiplex;
+                rust-overlay = inputs.rust-overlay;
               };
             }
             (
