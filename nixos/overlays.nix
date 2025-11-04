@@ -1,4 +1,4 @@
-nixpkgs-unstable:
+{ nixpkgs-unstable, ra-multiplex-src }:
 [
   (final: prev: {
     unstable = import nixpkgs-unstable {
@@ -10,16 +10,11 @@ nixpkgs-unstable:
   (final: prev: {
     ra-multiplex-latest = final.rustPlatform.buildRustPackage {
       pname = "ra-multiplex";
-      version = "unstable-2024-08-30";
+      version = "unstable";
 
-      src = final.fetchFromGitHub {
-        owner = "pr2502";
-        repo = "ra-multiplex";
-        rev = "master";
-        sha256 = "12x3rm9swnx21wllpbfwg5q4jvjr5ha6jn13dg2gjsbp0swbzqly";
-      };
+      src = ra-multiplex-src;
 
-      cargoHash = "sha256-PnZh6wBMul3D4lsUQdn7arF2Qng2vdqtZHpPOtN59eU=";
+      cargoHash = "sha256-pwgNtxnO3oyX/w+tzRY5vAptw5JhpRhKCB2HYLEuA3A=";
     };
   })
 ]

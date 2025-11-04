@@ -214,6 +214,22 @@
         "type": "github"
       }
     },
+    "ra-multiplex": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1760261682,
+        "narHash": "sha256-QWCL+DZpBxBlubXFGbsVsZkfuQsd4nDufv8i33ZVkeY=",
+        "owner": "pr2502",
+        "repo": "ra-multiplex",
+        "rev": "d01f84d54dfdc17767f5450e3e4a0a120a057cfb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pr2502",
+        "repo": "ra-multiplex",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "home-manager": "home-manager",
@@ -223,7 +239,8 @@
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
         "nixpkgs-darwin": "nixpkgs-darwin",
-        "nixpkgs-unstable": "nixpkgs-unstable"
+        "nixpkgs-unstable": "nixpkgs-unstable",
+        "ra-multiplex": "ra-multiplex"
       }
     }
   },

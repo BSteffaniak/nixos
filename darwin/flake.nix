@@ -31,6 +31,11 @@
       url = "github:homebrew/homebrew-cask";
       flake = false;
     };
+
+    ra-multiplex = {
+      url = "github:pr2502/ra-multiplex";
+      flake = false;
+    };
   };
 
   outputs =
@@ -57,7 +62,10 @@
             home-manager.darwinModules.home-manager
             nix-homebrew.darwinModules.nix-homebrew
             {
-              nixpkgs.overlays = import ./overlays.nix nixpkgs-unstable;
+              nixpkgs.overlays = import ./overlays.nix { 
+                inherit nixpkgs-unstable;
+                ra-multiplex-src = inputs.ra-multiplex;
+              };
             }
             (
               { config, ... }:
@@ -100,7 +108,10 @@
             home-manager.darwinModules.home-manager
             nix-homebrew.darwinModules.nix-homebrew
             {
-              nixpkgs.overlays = import ./overlays.nix nixpkgs-unstable;
+              nixpkgs.overlays = import ./overlays.nix { 
+                inherit nixpkgs-unstable;
+                ra-multiplex-src = inputs.ra-multiplex;
+              };
             }
             (
               { config, ... }:
