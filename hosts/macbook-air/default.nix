@@ -24,6 +24,7 @@
     development.python.enable = true;
     development.android.enable = true;
     development.devops.enable = true;
+    development.openssl.enable = true;
 
     # Shell and editors
     shell.fish.enable = true;

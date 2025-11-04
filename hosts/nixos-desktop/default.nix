@@ -42,6 +42,7 @@
     development.android.enable = true;
     development.devops.enable = true;
     development.zig.enable = true;
+    development.openssl.enable = true;
 
     # Shell and editors
     shell.fish.enable = true;

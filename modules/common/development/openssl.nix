@@ -14,10 +14,12 @@ with lib;
 
   config = mkIf config.myConfig.development.openssl.enable {
     environment.systemPackages = with pkgs; [
+      pkg-config
       openssl
+      openssl.dev
     ];
 
-    environment.variables = mkIf pkgs.stdenv.isDarwin {
+    environment.variables = {
       PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
     };
   };
