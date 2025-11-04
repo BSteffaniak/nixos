@@ -219,6 +219,64 @@ ENABLE_ANDROID=$(prompt_yes_no "  Android SDK?" "n" && echo "true" || echo "fals
 ENABLE_DEVOPS=$(prompt_yes_no "  DevOps tools (terraform, kubectl, etc)?" "y" && echo "true" || echo "false")
 ENABLE_OPENSSL=$(prompt_yes_no "  OpenSSL development?" "y" && echo "true" || echo "false")
 
+# .NET Configuration
+ENABLE_DOTNET=$(prompt_yes_no "  .NET SDK?" "n" && echo "true" || echo "false")
+if [ "$ENABLE_DOTNET" = "true" ]; then
+    DOTNET_RUNTIME_ONLY=$(prompt_yes_no "    Runtime-only (no SDK)?" "n" && echo "true" || echo "false")
+
+    if [ "$DOTNET_RUNTIME_ONLY" = "true" ]; then
+        echo "    Select .NET runtime versions (separate with spaces, or leave empty for latest):"
+        echo "      Available: 6, 7, 8, 9, 10"
+        read -p "    Versions: " DOTNET_RUNTIME_VERSIONS
+    else
+        echo "    Select .NET SDK versions (separate with spaces, or leave empty for latest):"
+        echo "      Available: 6, 7, 8, 9, 10"
+        read -p "    Versions: " DOTNET_SDK_VERSIONS
+    fi
+
+    ENABLE_ASPNETCORE=$(prompt_yes_no "    Enable ASP.NET Core runtime?" "n" && echo "true" || echo "false")
+    if [ "$ENABLE_ASPNETCORE" = "true" ]; then
+        echo "    Select ASP.NET Core versions (separate with spaces, or leave empty for latest):"
+        echo "      Available: 8, 9, 10"
+        read -p "    Versions: " ASPNETCORE_VERSIONS
+    fi
+
+    ENABLE_EF=$(prompt_yes_no "    Enable Entity Framework tools?" "y" && echo "true" || echo "false")
+
+    echo "    Global .NET tools:"
+    ENABLE_DOTNET_OUTDATED=$(prompt_yes_no "      dotnet-outdated (check outdated dependencies)?" "n" && echo "true" || echo "false")
+    ENABLE_DOTNET_REPL=$(prompt_yes_no "      dotnet-repl (interactive C# REPL)?" "n" && echo "true" || echo "false")
+    ENABLE_DOTNET_FORMATTERS=$(prompt_yes_no "      Code formatters (CSharpier, Fantomas)?" "n" && echo "true" || echo "false")
+    ENABLE_DOTNET_PAKET=$(prompt_yes_no "      Paket (dependency manager)?" "n" && echo "true" || echo "false")
+
+    ENABLE_NUGET_CUSTOM=$(prompt_yes_no "    Configure custom NuGet sources?" "n" && echo "true" || echo "false")
+    if [ "$ENABLE_NUGET_CUSTOM" = "true" ]; then
+        echo "    Enter custom NuGet sources (one per line, format: name=url)"
+        echo "    Press Enter on empty line when done:"
+        NUGET_SOURCES=""
+        while true; do
+            read -p "    Source: " nuget_source
+            if [ -z "$nuget_source" ]; then
+                break
+            fi
+            NUGET_SOURCES="$NUGET_SOURCES$nuget_source|"
+        done
+    fi
+else
+    DOTNET_RUNTIME_ONLY="false"
+    DOTNET_SDK_VERSIONS=""
+    DOTNET_RUNTIME_VERSIONS=""
+    ENABLE_ASPNETCORE="false"
+    ASPNETCORE_VERSIONS=""
+    ENABLE_EF="false"
+    ENABLE_DOTNET_OUTDATED="false"
+    ENABLE_DOTNET_REPL="false"
+    ENABLE_DOTNET_FORMATTERS="false"
+    ENABLE_DOTNET_PAKET="false"
+    ENABLE_NUGET_CUSTOM="false"
+    NUGET_SOURCES=""
+fi
+
 # Platform-specific tools
 if [ "$PLATFORM" = "darwin" ]; then
     ENABLE_PODMAN=$(prompt_yes_no "  Podman (container runtime)?" "y" && echo "true" || echo "false")
@@ -354,6 +412,19 @@ mkdir -p "$SCRIPT_DIR/hosts/$HOSTNAME"
     --android "$ENABLE_ANDROID" \
     --devops "$ENABLE_DEVOPS" \
     --openssl "$ENABLE_OPENSSL" \
+    --dotnet "$ENABLE_DOTNET" \
+    --dotnet-runtime-only "$DOTNET_RUNTIME_ONLY" \
+    --dotnet-sdk-versions "$DOTNET_SDK_VERSIONS" \
+    --dotnet-runtime-versions "$DOTNET_RUNTIME_VERSIONS" \
+    --dotnet-aspnetcore "$ENABLE_ASPNETCORE" \
+    --dotnet-aspnetcore-versions "$ASPNETCORE_VERSIONS" \
+    --dotnet-ef "$ENABLE_EF" \
+    --dotnet-outdated "$ENABLE_DOTNET_OUTDATED" \
+    --dotnet-repl "$ENABLE_DOTNET_REPL" \
+    --dotnet-formatters "$ENABLE_DOTNET_FORMATTERS" \
+    --dotnet-paket "$ENABLE_DOTNET_PAKET" \
+    --dotnet-nuget-custom "$ENABLE_NUGET_CUSTOM" \
+    --dotnet-nuget-sources "$NUGET_SOURCES" \
     --podman "$ENABLE_PODMAN" \
     --docker "$ENABLE_DOCKER" \
     --neovim "$ENABLE_NEOVIM" \

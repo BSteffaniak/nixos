@@ -25,6 +25,19 @@ while [[ $# -gt 0 ]]; do
         --android) ENABLE_ANDROID="$2"; shift 2 ;;
         --devops) ENABLE_DEVOPS="$2"; shift 2 ;;
         --openssl) ENABLE_OPENSSL="$2"; shift 2 ;;
+        --dotnet) ENABLE_DOTNET="$2"; shift 2 ;;
+        --dotnet-runtime-only) DOTNET_RUNTIME_ONLY="$2"; shift 2 ;;
+        --dotnet-sdk-versions) DOTNET_SDK_VERSIONS="$2"; shift 2 ;;
+        --dotnet-runtime-versions) DOTNET_RUNTIME_VERSIONS="$2"; shift 2 ;;
+        --dotnet-aspnetcore) ENABLE_ASPNETCORE="$2"; shift 2 ;;
+        --dotnet-aspnetcore-versions) ASPNETCORE_VERSIONS="$2"; shift 2 ;;
+        --dotnet-ef) ENABLE_EF="$2"; shift 2 ;;
+        --dotnet-outdated) ENABLE_DOTNET_OUTDATED="$2"; shift 2 ;;
+        --dotnet-repl) ENABLE_DOTNET_REPL="$2"; shift 2 ;;
+        --dotnet-formatters) ENABLE_DOTNET_FORMATTERS="$2"; shift 2 ;;
+        --dotnet-paket) ENABLE_DOTNET_PAKET="$2"; shift 2 ;;
+        --dotnet-nuget-custom) ENABLE_NUGET_CUSTOM="$2"; shift 2 ;;
+        --dotnet-nuget-sources) NUGET_SOURCES="$2"; shift 2 ;;
         --podman) ENABLE_PODMAN="$2"; shift 2 ;;
         --docker) ENABLE_DOCKER="$2"; shift 2 ;;
         --neovim) ENABLE_NEOVIM="$2"; shift 2 ;;
@@ -78,6 +91,19 @@ ENABLE_ZIG="${ENABLE_ZIG:-false}"
 ENABLE_ANDROID="${ENABLE_ANDROID:-false}"
 ENABLE_DEVOPS="${ENABLE_DEVOPS:-true}"
 ENABLE_OPENSSL="${ENABLE_OPENSSL:-true}"
+ENABLE_DOTNET="${ENABLE_DOTNET:-false}"
+DOTNET_RUNTIME_ONLY="${DOTNET_RUNTIME_ONLY:-false}"
+DOTNET_SDK_VERSIONS="${DOTNET_SDK_VERSIONS:-}"
+DOTNET_RUNTIME_VERSIONS="${DOTNET_RUNTIME_VERSIONS:-}"
+ENABLE_ASPNETCORE="${ENABLE_ASPNETCORE:-false}"
+ASPNETCORE_VERSIONS="${ASPNETCORE_VERSIONS:-}"
+ENABLE_EF="${ENABLE_EF:-true}"
+ENABLE_DOTNET_OUTDATED="${ENABLE_DOTNET_OUTDATED:-false}"
+ENABLE_DOTNET_REPL="${ENABLE_DOTNET_REPL:-false}"
+ENABLE_DOTNET_FORMATTERS="${ENABLE_DOTNET_FORMATTERS:-false}"
+ENABLE_DOTNET_PAKET="${ENABLE_DOTNET_PAKET:-false}"
+ENABLE_NUGET_CUSTOM="${ENABLE_NUGET_CUSTOM:-false}"
+NUGET_SOURCES="${NUGET_SOURCES:-}"
 ENABLE_NEOVIM="${ENABLE_NEOVIM:-true}"
 NEOVIM_NIGHTLY="${NEOVIM_NIGHTLY:-true}"
 ENABLE_FISH="${ENABLE_FISH:-true}"
@@ -184,6 +210,89 @@ EOF
     fi
     if [ "$ENABLE_OPENSSL" = "true" ]; then
         echo "    development.openssl.enable = true;" >> "$OUTPUT_FILE"
+    fi
+
+    # .NET Configuration
+    if [ "$ENABLE_DOTNET" = "true" ]; then
+        echo "    development.dotnet.enable = true;" >> "$OUTPUT_FILE"
+        
+        if [ "$DOTNET_RUNTIME_ONLY" = "true" ]; then
+            echo "    development.dotnet.runtimeOnly = true;" >> "$OUTPUT_FILE"
+            
+            if [ -n "$DOTNET_RUNTIME_VERSIONS" ]; then
+                # Convert space-separated versions to Nix list
+                VERSIONS_LIST=$(echo "$DOTNET_RUNTIME_VERSIONS" | tr ' ' '\n' | sed 's/^/      "/' | sed 's/$/"/' | tr '\n' ' ')
+                cat >> "$OUTPUT_FILE" << EOF
+    development.dotnet.runtimeVersions = [
+$VERSIONS_LIST
+    ];
+EOF
+            fi
+        else
+            if [ -n "$DOTNET_SDK_VERSIONS" ]; then
+                # Convert space-separated versions to Nix list
+                VERSIONS_LIST=$(echo "$DOTNET_SDK_VERSIONS" | tr ' ' '\n' | sed 's/^/      "/' | sed 's/$/"/' | tr '\n' ' ')
+                cat >> "$OUTPUT_FILE" << EOF
+    development.dotnet.sdkVersions = [
+$VERSIONS_LIST
+    ];
+EOF
+            fi
+        fi
+        
+        if [ "$ENABLE_ASPNETCORE" = "true" ]; then
+            echo "    development.dotnet.aspnetcore.enable = true;" >> "$OUTPUT_FILE"
+            
+            if [ -n "$ASPNETCORE_VERSIONS" ]; then
+                VERSIONS_LIST=$(echo "$ASPNETCORE_VERSIONS" | tr ' ' '\n' | sed 's/^/      "/' | sed 's/$/"/' | tr '\n' ' ')
+                cat >> "$OUTPUT_FILE" << EOF
+    development.dotnet.aspnetcore.versions = [
+$VERSIONS_LIST
+    ];
+EOF
+            fi
+        fi
+        
+        if [ "$ENABLE_EF" = "true" ]; then
+            echo "    development.dotnet.entityFramework.enable = true;" >> "$OUTPUT_FILE"
+        fi
+        
+        # Global tools
+        if [ "$ENABLE_DOTNET_OUTDATED" = "true" ] || [ "$ENABLE_DOTNET_REPL" = "true" ] || [ "$ENABLE_DOTNET_FORMATTERS" = "true" ] || [ "$ENABLE_DOTNET_PAKET" = "true" ]; then
+            if [ "$ENABLE_DOTNET_OUTDATED" = "true" ]; then
+                echo "    development.dotnet.globalTools.enableOutdated = true;" >> "$OUTPUT_FILE"
+            fi
+            if [ "$ENABLE_DOTNET_REPL" = "true" ]; then
+                echo "    development.dotnet.globalTools.enableRepl = true;" >> "$OUTPUT_FILE"
+            fi
+            if [ "$ENABLE_DOTNET_FORMATTERS" = "true" ]; then
+                echo "    development.dotnet.globalTools.enableFormatters = true;" >> "$OUTPUT_FILE"
+            fi
+            if [ "$ENABLE_DOTNET_PAKET" = "true" ]; then
+                echo "    development.dotnet.globalTools.enablePaket = true;" >> "$OUTPUT_FILE"
+            fi
+        fi
+        
+        # NuGet configuration
+        if [ "$ENABLE_NUGET_CUSTOM" = "true" ]; then
+            echo "    development.dotnet.nuget.enableCustomSources = true;" >> "$OUTPUT_FILE"
+            
+            if [ -n "$NUGET_SOURCES" ]; then
+                echo "    development.dotnet.nuget.sources = {" >> "$OUTPUT_FILE"
+                
+                # Parse pipe-separated sources (format: name=url|name2=url2)
+                IFS='|' read -ra SOURCES <<< "$NUGET_SOURCES"
+                for source in "${SOURCES[@]}"; do
+                    if [ -n "$source" ]; then
+                        SOURCE_NAME=$(echo "$source" | cut -d'=' -f1)
+                        SOURCE_URL=$(echo "$source" | cut -d'=' -f2)
+                        echo "      \"$SOURCE_NAME\" = \"$SOURCE_URL\";" >> "$OUTPUT_FILE"
+                    fi
+                done
+                
+                echo "    };" >> "$OUTPUT_FILE"
+            fi
+        fi
     fi
 
     # Shell and editors
@@ -344,6 +453,84 @@ EOF
     fi
     if [ "$ENABLE_JAVA" = "true" ]; then
         echo "    development.java.enable = true;" >> "$OUTPUT_FILE"
+    fi
+
+    # .NET Configuration (Darwin)
+    if [ "$ENABLE_DOTNET" = "true" ]; then
+        echo "    development.dotnet.enable = true;" >> "$OUTPUT_FILE"
+        
+        if [ "$DOTNET_RUNTIME_ONLY" = "true" ]; then
+            echo "    development.dotnet.runtimeOnly = true;" >> "$OUTPUT_FILE"
+            
+            if [ -n "$DOTNET_RUNTIME_VERSIONS" ]; then
+                VERSIONS_LIST=$(echo "$DOTNET_RUNTIME_VERSIONS" | tr ' ' '\n' | sed 's/^/      "/' | sed 's/$/"/' | tr '\n' ' ')
+                cat >> "$OUTPUT_FILE" << EOF
+    development.dotnet.runtimeVersions = [
+$VERSIONS_LIST
+    ];
+EOF
+            fi
+        else
+            if [ -n "$DOTNET_SDK_VERSIONS" ]; then
+                VERSIONS_LIST=$(echo "$DOTNET_SDK_VERSIONS" | tr ' ' '\n' | sed 's/^/      "/' | sed 's/$/"/' | tr '\n' ' ')
+                cat >> "$OUTPUT_FILE" << EOF
+    development.dotnet.sdkVersions = [
+$VERSIONS_LIST
+    ];
+EOF
+            fi
+        fi
+        
+        if [ "$ENABLE_ASPNETCORE" = "true" ]; then
+            echo "    development.dotnet.aspnetcore.enable = true;" >> "$OUTPUT_FILE"
+            
+            if [ -n "$ASPNETCORE_VERSIONS" ]; then
+                VERSIONS_LIST=$(echo "$ASPNETCORE_VERSIONS" | tr ' ' '\n' | sed 's/^/      "/' | sed 's/$/"/' | tr '\n' ' ')
+                cat >> "$OUTPUT_FILE" << EOF
+    development.dotnet.aspnetcore.versions = [
+$VERSIONS_LIST
+    ];
+EOF
+            fi
+        fi
+        
+        if [ "$ENABLE_EF" = "true" ]; then
+            echo "    development.dotnet.entityFramework.enable = true;" >> "$OUTPUT_FILE"
+        fi
+        
+        if [ "$ENABLE_DOTNET_OUTDATED" = "true" ] || [ "$ENABLE_DOTNET_REPL" = "true" ] || [ "$ENABLE_DOTNET_FORMATTERS" = "true" ] || [ "$ENABLE_DOTNET_PAKET" = "true" ]; then
+            if [ "$ENABLE_DOTNET_OUTDATED" = "true" ]; then
+                echo "    development.dotnet.globalTools.enableOutdated = true;" >> "$OUTPUT_FILE"
+            fi
+            if [ "$ENABLE_DOTNET_REPL" = "true" ]; then
+                echo "    development.dotnet.globalTools.enableRepl = true;" >> "$OUTPUT_FILE"
+            fi
+            if [ "$ENABLE_DOTNET_FORMATTERS" = "true" ]; then
+                echo "    development.dotnet.globalTools.enableFormatters = true;" >> "$OUTPUT_FILE"
+            fi
+            if [ "$ENABLE_DOTNET_PAKET" = "true" ]; then
+                echo "    development.dotnet.globalTools.enablePaket = true;" >> "$OUTPUT_FILE"
+            fi
+        fi
+        
+        if [ "$ENABLE_NUGET_CUSTOM" = "true" ]; then
+            echo "    development.dotnet.nuget.enableCustomSources = true;" >> "$OUTPUT_FILE"
+            
+            if [ -n "$NUGET_SOURCES" ]; then
+                echo "    development.dotnet.nuget.sources = {" >> "$OUTPUT_FILE"
+                
+                IFS='|' read -ra SOURCES <<< "$NUGET_SOURCES"
+                for source in "${SOURCES[@]}"; do
+                    if [ -n "$source" ]; then
+                        SOURCE_NAME=$(echo "$source" | cut -d'=' -f1)
+                        SOURCE_URL=$(echo "$source" | cut -d'=' -f2)
+                        echo "      \"$SOURCE_NAME\" = \"$SOURCE_URL\";" >> "$OUTPUT_FILE"
+                    fi
+                done
+                
+                echo "    };" >> "$OUTPUT_FILE"
+            fi
+        fi
     fi
 
     cat >> "$OUTPUT_FILE" << EOF

@@ -111,6 +111,7 @@ myConfig = {
   development.rust.enable = true;
   development.nodejs.enable = true;
   development.go.enable = true;
+  development.dotnet.enable = true;
 
   # Desktop (NixOS only)
   desktop.hyprland.enable = true;
@@ -121,6 +122,101 @@ myConfig = {
   # etc...
 };
 ```
+
+### .NET Development
+
+The .NET module provides comprehensive support for .NET development with flexible configuration options:
+
+**Simple SDK (latest stable):**
+
+```nix
+myConfig = {
+  development.dotnet.enable = true;
+  # Uses .NET SDK 8.x by default with Entity Framework tools
+};
+```
+
+**Multiple SDK versions:**
+
+```nix
+myConfig = {
+  development.dotnet.enable = true;
+  development.dotnet.sdkVersions = [ "8" "9" ];  # Install multiple versions
+  development.dotnet.entityFramework.enable = true;
+};
+```
+
+**Runtime-only (for deployment/production):**
+
+```nix
+myConfig = {
+  development.dotnet.enable = true;
+  development.dotnet.runtimeOnly = true;
+  development.dotnet.runtimeVersions = [ "8" ];
+  development.dotnet.aspnetcore.enable = true;
+  development.dotnet.aspnetcore.versions = [ "8" ];
+};
+```
+
+**Full development setup:**
+
+```nix
+myConfig = {
+  development.dotnet.enable = true;
+  development.dotnet.sdkVersions = [ "8" "9" ];
+
+  # ASP.NET Core
+  development.dotnet.aspnetcore.enable = true;
+  development.dotnet.aspnetcore.versions = [ "8" "9" ];
+
+  # Tools
+  development.dotnet.entityFramework.enable = true;
+  development.dotnet.globalTools = {
+    enableOutdated = true;      # dotnet-outdated
+    enableRepl = true;           # Interactive C# REPL
+    enableFormatters = true;     # CSharpier, Fantomas
+    enablePaket = false;         # Paket dependency manager
+  };
+
+  # Custom NuGet sources
+  development.dotnet.nuget = {
+    enableCustomSources = true;
+    sources = {
+      "myget" = "https://www.myget.org/F/my-feed/api/v3/index.json";
+      "github" = "https://nuget.pkg.github.com/myorg/index.json";
+    };
+  };
+};
+```
+
+**F# development:**
+
+```nix
+myConfig = {
+  development.dotnet.enable = true;
+  development.dotnet.sdkVersions = [ "9" ];
+  development.dotnet.globalTools = {
+    enableFormatters = true;  # Includes Fantomas for F#
+    enablePaket = true;       # Popular in F# community
+  };
+};
+```
+
+**Available options:**
+
+- **`sdkVersions`**: List of SDK versions (`"6"`, `"7"`, `"8"`, `"9"`, `"10"`)
+- **`runtimeOnly`**: Install only runtime (no SDK)
+- **`runtimeVersions`**: Runtime versions when `runtimeOnly = true`
+- **`aspnetcore.enable`**: Install ASP.NET Core runtime
+- **`aspnetcore.versions`**: Specific ASP.NET Core versions
+- **`entityFramework.enable`**: Install Entity Framework Core tools (default: true)
+- **`globalTools.enableOutdated`**: Install dotnet-outdated
+- **`globalTools.enableRepl`**: Install dotnet-repl (C# REPL)
+- **`globalTools.enableFormatters`**: Install CSharpier and Fantomas
+- **`globalTools.enablePaket`**: Install Paket dependency manager
+- **`nuget.enableCustomSources`**: Enable custom NuGet sources
+- **`nuget.sources`**: Attribute set of custom NuGet sources
+- **`nuget.configFile`**: Path to custom NuGet.Config file
 
 ## Adding Packages
 
