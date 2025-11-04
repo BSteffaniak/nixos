@@ -57,6 +57,7 @@ with lib;
       mediainfo
       flac
       ffmpeg
+      unstable.opencode
     ];
   };
 }
