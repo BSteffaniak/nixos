@@ -22,7 +22,7 @@
     development.nodejs.enable = true;
     development.go.enable = true;
     development.python.enable = true;
-    development.android.enable = true;
+    development.android.enable = false;
     development.devops.enable = true;
     development.openssl.enable = true;
 
