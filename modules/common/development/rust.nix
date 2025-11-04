@@ -14,7 +14,14 @@ with lib;
 
   config = mkIf config.myConfig.development.rust.enable {
     environment.systemPackages = with pkgs; [
-      rustup
+      # Wrapped cargo and rustc with +nightly/+stable support
+      cargo-wrapped
+      rustc-wrapped
+
+      # Include stable toolchain for rust-analyzer and other tools
+      rustStable
+
+      # Cargo utilities
       cargo-binstall
       cargo-nextest
       cargo-lambda

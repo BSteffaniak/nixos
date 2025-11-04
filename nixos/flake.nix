@@ -15,6 +15,10 @@
       url = "github:pr2502/ra-multiplex";
       flake = false;
     };
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -42,6 +46,7 @@
               ++ (import ./overlays.nix {
                 inherit nixpkgs-unstable;
                 ra-multiplex-src = inputs.ra-multiplex;
+                rust-overlay = inputs.rust-overlay;
               });
 
               home-manager = {
