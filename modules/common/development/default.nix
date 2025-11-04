@@ -12,6 +12,7 @@ with lib;
     ./rust.nix
     ./nodejs.nix
     ./go.nix
+    ./podman.nix
     ./python.nix
     ./android.nix
     ./devops.nix
