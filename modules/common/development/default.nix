@@ -17,6 +17,7 @@ with lib;
     ./android.nix
     ./devops.nix
     ./zig.nix
+    ./openssl.nix
   ];
 
   options.myConfig.development = {
