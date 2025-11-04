@@ -44,8 +44,8 @@
   };
 
   # Networking
-  networking.hostName = "Bradens-Mac-Mini";
-  networking.computerName = "Braden's Mac Mini";
+  networking.hostName = "Bradens-Mac-Studio";
+  networking.computerName = "Braden's Mac Studio";
 
   # User configuration
   system.primaryUser = "bsteffaniak";
@@ -53,6 +53,6 @@
   # System version
   system.stateVersion = 6;
 
-  # Platform - adjust this if your Mac Mini is Intel
+  # Platform - adjust this if your Mac Studio is Intel
   nixpkgs.hostPlatform = "aarch64-darwin"; # Change to "x86_64-darwin" if Intel
 }

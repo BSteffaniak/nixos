@@ -100,11 +100,11 @@
           ];
         };
 
-        mac-mini = nix-darwin.lib.darwinSystem {
+        mac-studio = nix-darwin.lib.darwinSystem {
           system = "aarch64-darwin"; # Change to "x86_64-darwin" if Intel
           specialArgs = { inherit inputs; };
           modules = [
-            ../hosts/mac-mini
+            ../hosts/mac-studio
             home-manager.darwinModules.home-manager
             nix-homebrew.darwinModules.nix-homebrew
             {

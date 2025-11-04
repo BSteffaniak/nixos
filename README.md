@@ -28,7 +28,7 @@ This ensures that building NixOS configurations doesn't download unnecessary Dar
 ├── hosts/                   # Per-machine configurations
 │   ├── nixos-desktop/      # NixOS desktop PC
 │   ├── macbook-air/        # MacBook Air (Apple Silicon)
-│   └── mac-mini/           # Mac Mini
+│   └── mac-studio/         # Mac Studio
 │
 ├── modules/                 # Reusable modules
 │   ├── common/             # Cross-platform modules
@@ -67,7 +67,7 @@ The `rebuild.sh` script automatically detects your platform and uses the correct
 ./rebuild.sh
 
 # On NixOS: uses nixos#nixos-desktop
-# On Darwin: uses darwin#macbook-air or mac-mini
+# On Darwin: uses darwin#macbook-air or mac-studio
 ```
 
 ### Manual Usage
@@ -99,7 +99,7 @@ darwin-rebuild switch --flake ./darwin#macbook-air
 
 - **nixos-desktop**: NixOS desktop PC with NVIDIA GPU, Hyprland, development tools
 - **macbook-air**: MacBook Air (Apple Silicon) with development tools
-- **mac-mini**: Mac Mini with development tools
+- **mac-studio**: Mac Studio with development tools
 
 ## Customization
 
@@ -267,6 +267,7 @@ This allows sharing development tools, shell configurations, and CLI utilities a
 ## Updating
 
 **NixOS:**
+
 ```bash
 cd nixos
 nix flake update                           # Update all inputs
@@ -276,6 +277,7 @@ cd ..
 ```
 
 **Darwin:**
+
 ```bash
 cd darwin
 nix flake update                           # Update all inputs

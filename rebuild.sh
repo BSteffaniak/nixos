@@ -20,8 +20,8 @@ case $HOST in
     REBUILD_CMD="sudo darwin-rebuild"
     PLATFORM="Darwin"
     ;;
-  "BradensacStudio.home")
-    FLAKE_PATH="$SCRIPT_DIR/darwin#mac-mini"
+  "Bradens-Mac-Studio")
+    FLAKE_PATH="$SCRIPT_DIR/darwin#mac-studio"
     REBUILD_CMD="sudo darwin-rebuild"
     PLATFORM="Darwin"
     ;;
@@ -31,7 +31,7 @@ case $HOST in
     echo "Available targets:"
     echo "  NixOS: nixos#nixos-desktop"
     echo "  Darwin: darwin#macbook-air"
-    echo "  Darwin: darwin#mac-mini"
+    echo "  Darwin: darwin#mac-studio"
     exit 1
     ;;
 esac
