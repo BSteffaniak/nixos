@@ -136,6 +136,7 @@ EOF
     if [ "$ENABLE_MINECRAFT" = "true" ]; then
         cat >> "$OUTPUT_FILE" << EOF
     inputs.nix-minecraft.nixosModules.minecraft-servers
+    ../../modules/nixos/services/minecraft.nix
 EOF
     fi
 

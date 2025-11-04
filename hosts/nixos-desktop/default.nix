@@ -12,6 +12,7 @@
     ../../modules/common
     ../../modules/nixos
     inputs.nix-minecraft.nixosModules.minecraft-servers
+    ../../modules/nixos/services/minecraft.nix
   ];
 
   # Host-specific settings
