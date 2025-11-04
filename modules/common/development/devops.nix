@@ -18,6 +18,7 @@ with lib;
       aws-sam-cli
       kubectl
       kind
+      kubernetes-helm-wrapped
       krew
       cmctl
       doctl
