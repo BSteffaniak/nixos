@@ -20,9 +20,19 @@ with lib;
 
   config = mkIf config.myConfig.editors.neovim.enable {
     environment.systemPackages =
-      if config.myConfig.editors.neovim.useNightly then
-        [ inputs.neovim-nightly-overlay.packages."${pkgs.system}".default ]
-      else
-        [ pkgs.neovim ];
+      with pkgs;
+      [
+        # Lua runtime and development tools
+        lua # Standard Lua interpreter (5.x)
+        luajit # LuaJIT - faster JIT compiler (what Neovim uses)
+        luajitPackages.luarocks # Lua package manager
+      ]
+      ++ (
+        # Neovim editor (conditional: nightly or stable)
+        if config.myConfig.editors.neovim.useNightly then
+          [ inputs.neovim-nightly-overlay.packages."${pkgs.system}".default ]
+        else
+          [ pkgs.neovim ]
+      );
   };
 }
