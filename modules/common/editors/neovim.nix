@@ -26,6 +26,7 @@ with lib;
         lua # Standard Lua interpreter (5.x)
         luajit # LuaJIT - faster JIT compiler (what Neovim uses)
         luajitPackages.luarocks # Lua package manager
+        stylua # Lua code formatter
       ]
       ++ (
         # Neovim editor (conditional: nightly or stable)
