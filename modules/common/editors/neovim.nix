@@ -43,6 +43,7 @@ with lib;
         svelte-language-server # Svelte language server
         terraform-ls # Terraform language server
         typescript-language-server # TypeScript language server
+        gopls # Go language server
       ]
       ++ (
         # Neovim editor (conditional: nightly or stable)
