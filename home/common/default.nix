@@ -8,6 +8,7 @@
 {
   imports = [
     ./git.nix
+    ./fish.nix
     ./shell.nix
     ./packages.nix
   ];
