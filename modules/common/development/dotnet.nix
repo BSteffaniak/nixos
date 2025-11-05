@@ -155,6 +155,39 @@ in
         description = "Path to custom NuGet.Config file";
       };
     };
+
+    # Telemetry and CLI Experience
+    telemetry = {
+      optOut = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Disable .NET CLI telemetry collection.
+          Sets DOTNET_CLI_TELEMETRY_OPTOUT=1 when true.
+          Microsoft collects usage data by default; this opts out.
+        '';
+      };
+
+      skipFirstTimeExperience = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Skip first-run experience messages and prompts.
+          Sets DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 when true.
+          Useful for automated environments and CI/CD.
+        '';
+      };
+
+      disableLogo = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Disable .NET logo display in CLI output.
+          Sets DOTNET_NOLOGO=1 when true.
+          Reduces visual noise in terminal output.
+        '';
+      };
+    };
   };
 
   config = mkIf cfg.enable {
@@ -269,5 +302,18 @@ in
           '';
         }
     );
+
+    # Telemetry and CLI environment configuration
+    environment.variables = mkMerge [
+      (mkIf cfg.telemetry.optOut {
+        DOTNET_CLI_TELEMETRY_OPTOUT = "1";
+      })
+      (mkIf cfg.telemetry.skipFirstTimeExperience {
+        DOTNET_SKIP_FIRST_TIME_EXPERIENCE = "1";
+      })
+      (mkIf cfg.telemetry.disableLogo {
+        DOTNET_NOLOGO = "1";
+      })
+    ];
   };
 }
