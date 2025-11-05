@@ -60,6 +60,24 @@ with lib;
         ]
       '';
     };
+
+    extraConfigFiles = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      description = ''
+        List of additional fish config files to source.
+        Paths are relative to home directory.
+        Useful for sourcing non-Nix managed configurations.
+        Files are sourced in order, and only if they exist.
+      '';
+      example = literalExpression ''
+        [
+          ".config/fish/work.fish"
+          ".config/fish/private.fish"
+          ".local/fish/custom.fish"
+        ]
+      '';
+    };
   };
 
   config = mkIf config.homeModules.fish.enable {
@@ -86,6 +104,19 @@ with lib;
         # Source NixOS system environment variables
         if test -e /etc/set-environment
           bass source /etc/set-environment
+        end
+
+        # Source extra config files specified in configuration
+        ${concatMapStringsSep "\n" (file: ''
+          if test -e "$HOME/${file}"
+            source "$HOME/${file}"
+          end
+        '') config.homeModules.fish.extraConfigFiles}
+
+        # Source local override file (convention-based)
+        # This allows quick customizations without rebuilding
+        if test -e "$HOME/.config/fish/local.fish"
+          source "$HOME/.config/fish/local.fish"
         end
 
         ${config.homeModules.fish.interactiveShellInit}
