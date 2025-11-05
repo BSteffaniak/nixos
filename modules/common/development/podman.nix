@@ -16,5 +16,10 @@ with lib;
     environment.systemPackages = with pkgs; [
       podman
     ];
+
+    # Set DOCKER_HOST to point to podman socket
+    environment.variables = {
+      DOCKER_HOST = "unix://$HOME/.local/share/containers/podman/machine/podman.sock";
+    };
   };
 }
