@@ -15,6 +15,11 @@ with lib;
   config = mkIf config.myConfig.development.python.enable {
     environment.systemPackages = with pkgs; [
       python3
+
+      # Python development tools
+      black # Python code formatter
+      isort # Python import sorter
+      pyright # Python type checker/LSP
     ];
   };
 }

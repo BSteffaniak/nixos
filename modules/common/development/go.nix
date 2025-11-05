@@ -15,6 +15,7 @@ with lib;
   config = mkIf config.myConfig.development.go.enable {
     environment.systemPackages = with pkgs; [
       go
+      gopls # Go LSP
     ];
   };
 }

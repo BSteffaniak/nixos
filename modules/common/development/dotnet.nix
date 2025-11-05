@@ -279,7 +279,13 @@ in
           ++ (optional cfg.globalTools.enablePaket pkgs.dotnetPackages.Paket);
 
       in
-      [ dotnetPackage ] ++ aspnetcorePackages ++ efPackages ++ globalToolPackages;
+      [ dotnetPackage ]
+      ++ aspnetcorePackages
+      ++ efPackages
+      ++ globalToolPackages
+      ++ [
+        fsautocomplete # F# LSP (FSAC)
+      ];
 
     # NuGet configuration
     environment.etc."nuget/NuGet.Config" = mkIf cfg.nuget.enableCustomSources (

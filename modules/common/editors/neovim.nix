@@ -22,28 +22,18 @@ with lib;
     environment.systemPackages =
       with pkgs;
       [
-        # Lua runtime and development tools
+        # Lua runtime and development tools (Neovim core dependencies)
         lua # Standard Lua interpreter (5.x)
         luajit # LuaJIT - faster JIT compiler (what Neovim uses)
         luajitPackages.luarocks # Lua package manager
-        stylua # Lua code formatter
-        lua-language-server # Lua language server
-        black # Python code formatter
-        isort # Python import sorter
-        pyright # Python type checker
-        fsautocomplete # (FSAC) F# code completion/LSP
-        buf # Protocol buffer (Protobuf) code completion/LSP
-        clang-tools # C/C++ code completion/LSP
-        bash-language-server # Bash language server
-        astro-language-server # Astro language server
-        beamMinimal27Packages.elixir-ls # Elixir language server
-        vscode-langservers-extracted # HTML/CSS/JSON/ESLint language servers
-        kotlin-language-server # Kotlin language server
-        nil # Nix language server
-        svelte-language-server # Svelte language server
-        terraform-ls # Terraform language server
-        typescript-language-server # TypeScript language server
-        gopls # Go language server
+
+        # Neovim configuration editing tools
+        stylua # Lua formatter (for editing Neovim config)
+        lua-language-server # Lua LSP (for editing Neovim config)
+
+        # Universal system language servers
+        nil # Nix LSP (for editing NixOS configs)
+        bash-language-server # Bash LSP (shell scripts are universal)
       ]
       ++ (
         # Neovim editor (conditional: nightly or stable)

@@ -15,6 +15,7 @@ with lib;
   config = mkIf config.myConfig.development.java.enable {
     environment.systemPackages = with pkgs; [
       maven
+      kotlin-language-server # Kotlin LSP
     ];
   };
 }

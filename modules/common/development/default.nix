@@ -20,6 +20,8 @@ with lib;
     ./openssl.nix
     ./java.nix
     ./dotnet.nix
+    ./c-cpp.nix
+    ./elixir.nix
   ];
 
   options.myConfig.development = {

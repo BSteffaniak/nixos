@@ -25,6 +25,10 @@ with lib;
       lazydocker
       stern
       opentofu
+
+      # Infrastructure language servers
+      terraform-ls # Terraform LSP
+      buf # Protocol buffer (Protobuf) LSP
     ];
   };
 }

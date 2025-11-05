@@ -17,6 +17,12 @@ with lib;
       nodePackages_latest.nodejs
       pnpm_10
       unstable.bun
+
+      # Web development language servers
+      typescript-language-server
+      astro-language-server
+      svelte-language-server
+      vscode-langservers-extracted # HTML/CSS/JSON/ESLint
     ];
   };
 }
