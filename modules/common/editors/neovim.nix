@@ -30,7 +30,19 @@ with lib;
         lua-language-server # Lua language server
         black # Python code formatter
         isort # Python import sorter
+        pyright # Python type checker
         fsautocomplete # (FSAC) F# code completion/LSP
+        buf # Protocol buffer (Protobuf) code completion/LSP
+        clang-tools # C/C++ code completion/LSP
+        bash-language-server # Bash language server
+        astro-language-server # Astro language server
+        beamMinimal27Packages.elixir-ls # Elixir language server
+        vscode-langservers-extracted # HTML/CSS/JSON/ESLint language servers
+        kotlin-language-server # Kotlin language server
+        nil # Nix language server
+        svelte-language-server # Svelte language server
+        terraform-ls # Terraform language server
+        typescript-language-server # TypeScript language server
       ]
       ++ (
         # Neovim editor (conditional: nightly or stable)
