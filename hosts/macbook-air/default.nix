@@ -32,7 +32,7 @@
     shell.fish.enable = true;
     shell.git.enable = true;
     editors.neovim.enable = true;
-    editors.neovim.useNightly = false;
+    editors.neovim.useNightly = true;
 
     # CLI tools
     cliTools.enable = true;

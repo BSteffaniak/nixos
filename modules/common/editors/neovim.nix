@@ -13,7 +13,7 @@ with lib;
     enable = mkEnableOption "Neovim editor";
     useNightly = mkOption {
       type = types.bool;
-      default = true;
+      default = false;
       description = "Use nightly Neovim build";
     };
   };
