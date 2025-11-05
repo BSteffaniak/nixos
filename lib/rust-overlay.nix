@@ -4,6 +4,8 @@
   (import rust-overlay)
 
   # Define stable and nightly toolchains
+  # These are always available in the overlay, but only included in systemPackages
+  # based on the myConfig.development.rust.includeStable/includeNightly options
   (final: prev: {
     rustStable = final.rust-bin.stable.latest.default.override {
       extensions = [
@@ -25,6 +27,8 @@
   })
 
   # Create wrapper scripts for cargo and rustc
+  # These wrappers support +nightly/+stable syntax for switching between toolchains
+  # Only installed when both stable and nightly are enabled
   (final: prev: {
     cargo-wrapped = final.writeShellScriptBin "cargo" ''
       case "$1" in

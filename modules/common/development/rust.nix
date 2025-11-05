@@ -7,26 +7,74 @@
 
 with lib;
 
+let
+  cfg = config.myConfig.development.rust;
+
+  # Determine which Rust packages to include based on configuration
+  rustPackages =
+    let
+      hasStable = cfg.includeStable;
+      hasNightly = cfg.includeNightly;
+
+      # Base cargo utilities
+      cargoUtils = with pkgs; [
+        cargo-binstall
+        cargo-nextest
+        cargo-lambda
+        ra-multiplex-latest
+      ];
+
+      # Rust toolchain packages based on configuration
+      rustToolchains =
+        if hasStable && hasNightly then
+          # Both stable and nightly: use wrappers
+          with pkgs;
+          [
+            cargo-wrapped
+            rustc-wrapped
+            rustStable # Keep stable for rust-analyzer
+          ]
+        else if hasStable then
+          # Stable only: use direct packages
+          with pkgs;
+          [
+            rustStable
+          ]
+        else if hasNightly then
+          # Nightly only: use direct packages
+          with pkgs;
+          [
+            rustNightly
+          ]
+        else
+          # Neither enabled: empty list
+          [ ];
+    in
+    rustToolchains ++ cargoUtils;
+in
 {
   options.myConfig.development.rust = {
     enable = mkEnableOption "Rust development environment";
+
+    includeStable = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Include Rust stable toolchain";
+    };
+
+    includeNightly = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Include Rust nightly toolchain";
+    };
   };
 
-  config = mkIf config.myConfig.development.rust.enable {
-    environment.systemPackages = with pkgs; [
-      # Wrapped cargo and rustc with +nightly/+stable support
-      cargo-wrapped
-      rustc-wrapped
+  config = mkIf cfg.enable {
+    environment.systemPackages = rustPackages;
 
-      # Include stable toolchain for rust-analyzer and other tools
-      rustStable
-
-      # Cargo utilities
-      cargo-binstall
-      cargo-nextest
-      cargo-lambda
-
-      ra-multiplex-latest
-    ];
+    # Warn if neither stable nor nightly is enabled
+    warnings = optional (
+      !cfg.includeStable && !cfg.includeNightly
+    ) "Rust development environment is enabled but neither stable nor nightly toolchain is included.";
   };
 }

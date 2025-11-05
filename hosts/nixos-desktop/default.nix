@@ -37,6 +37,7 @@
 
     # Development tools
     development.rust.enable = true;
+    development.rust.includeNightly = true;
     development.nodejs.enable = true;
     development.go.enable = true;
     development.python.enable = true;
