@@ -16,15 +16,13 @@ let
       hasStable = cfg.includeStable;
       hasNightly = cfg.includeNightly;
 
-      # Base cargo utilities
+      # Cargo development tools
       cargoUtils =
         with pkgs;
-        [
-          cargo-binstall
-          cargo-nextest
-          cargo-lambda
-        ]
-        ++ (optional cfg.includeRaMultiplex ra-multiplex-latest);
+        (optional cfg.cargoTools.includeBinstall cargo-binstall)
+        ++ (optional cfg.cargoTools.includeNextest cargo-nextest)
+        ++ (optional cfg.cargoTools.includeLambda cargo-lambda)
+        ++ (optional cfg.cargoTools.includeRaMultiplex ra-multiplex-latest);
 
       # Rust toolchain packages based on configuration
       rustToolchains =
@@ -70,14 +68,42 @@ in
       description = "Include Rust nightly toolchain";
     };
 
-    includeRaMultiplex = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Include ra-multiplex (rust-analyzer multiplexer).
-        Useful for managing multiple rust-analyzer instances in monorepos.
-        Set to false if you don't need this tool.
-      '';
+    cargoTools = {
+      includeBinstall = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Include cargo-binstall for binary crate installation.
+          Allows installing cargo binaries without building from source.
+        '';
+      };
+
+      includeNextest = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Include cargo-nextest, a next-generation test runner.
+          Provides faster test execution and better output.
+        '';
+      };
+
+      includeLambda = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Include cargo-lambda for AWS Lambda development.
+          Only needed if you're developing Rust applications for AWS Lambda.
+        '';
+      };
+
+      includeRaMultiplex = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Include ra-multiplex (rust-analyzer multiplexer).
+          Useful for managing multiple rust-analyzer instances in monorepos.
+        '';
+      };
     };
   };
 
