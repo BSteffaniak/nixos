@@ -172,29 +172,59 @@ let
     direnv hook fish | source
   '';
 
+  # ============================================================
+  # SMART DEFAULTS BASED ON SYSTEM CONFIGURATION
+  # ============================================================
+  # These use mkDefault so they can be overridden in host-specific configs
+  smartDefaults = {
+    # Neovim features: auto-enable if neovim is enabled system-wide
+    neovim.enable = mkDefault (osConfig.myConfig.editors.neovim.enable or true);
+
+    # Editor config: use neovim if it's enabled system-wide
+    editor = {
+      enable = mkDefault true;
+      nvim = mkDefault (osConfig.myConfig.editors.neovim.enable or true);
+    };
+
+    # Direnv: enabled by default when fish is enabled
+    direnv.enable = mkDefault (osConfig.myConfig.shell.fish.enable or true);
+
+    # Utilities: always enabled by default (generally useful)
+    utilities.enable = mkDefault true;
+
+    # Project-specific features: opt-in only (keep as false)
+    flat.enable = mkDefault false;
+    zellij.enable = mkDefault false;
+    opencode.enable = mkDefault false;
+    development.enable = mkDefault false;
+  };
+
 in
 {
   config = mkIf osConfig.myConfig.shell.fish.enable {
-    # Enable fish shell with feature-based configuration
-    homeModules.fish = {
-      enable = true;
+    # Apply smart defaults, then merge with feature-based configuration
+    homeModules.fish = mkMerge [
+      smartDefaults
+      {
+        enable = true;
 
-      # Merge built-in functions (don't reference fishCfg.functions to avoid recursion)
-      functions = mkMerge [
-        flatFunctions
-        zellijFunctions
-        opencodeFunctions
-        neovimFunctions
-        utilitiesFunctions
-        developmentFunctions
-      ];
+        # Merge built-in functions (don't reference fishCfg.functions to avoid recursion)
+        functions = mkMerge [
+          flatFunctions
+          zellijFunctions
+          opencodeFunctions
+          neovimFunctions
+          utilitiesFunctions
+          developmentFunctions
+        ];
 
-      # Merge init scripts (don't reference fishCfg.interactiveShellInit to avoid recursion)
-      interactiveShellInit = mkMerge [
-        editorInit
-        direnvInit
-      ];
-    };
+        # Merge init scripts (don't reference fishCfg.interactiveShellInit to avoid recursion)
+        interactiveShellInit = mkMerge [
+          editorInit
+          direnvInit
+        ];
+      }
+    ];
 
     # Set session variables for editor
     home.sessionVariables = mkIf (fishCfg.editor.enable && fishCfg.editor.nvim) {

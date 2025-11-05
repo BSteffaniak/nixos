@@ -134,7 +134,10 @@ with lib;
       enable = mkOption {
         type = types.bool;
         default = true;
-        description = "Enable Neovim-specific features";
+        description = ''
+          Enable Neovim-specific features.
+          Automatically detected from system configuration (myConfig.editors.neovim.enable).
+        '';
       };
 
       sessionLoading = mkOption {
@@ -203,7 +206,10 @@ with lib;
       nvim = mkOption {
         type = types.bool;
         default = true;
-        description = "Set neovim as EDITOR and VISUAL (requires editor.enable)";
+        description = ''
+          Set neovim as EDITOR and VISUAL (requires editor.enable).
+          Automatically detected from system configuration (myConfig.editors.neovim.enable).
+        '';
       };
     };
 
