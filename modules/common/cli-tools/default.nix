@@ -58,6 +58,7 @@ with lib;
       flac
       ffmpeg
       unstable.opencode
+      unstable.claude-code
     ];
   };
 }
