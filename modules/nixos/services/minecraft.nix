@@ -30,6 +30,13 @@ in
   };
 
   config = mkIf config.myConfig.services.minecraft.enable {
+    environment.systemPackages =
+      with pkgs;
+      [ ]
+      ++ lib.optionals pkgs.stdenv.isLinux [
+        prismlauncher
+      ];
+
     services.minecraft-servers = {
       enable = true;
       eula = true;

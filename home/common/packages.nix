@@ -34,7 +34,6 @@
       brightnessctl
       libinput
       evtest
-      prismlauncher
       qalculate-gtk
       libsForQt5.vvave
       kdePackages.elisa
