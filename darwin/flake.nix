@@ -93,6 +93,7 @@
                 home-manager = {
                   useGlobalPkgs = true;
                   useUserPackages = true;
+                  backupFileExtension = "backup";
                   users.${username} = import ../home/darwin;
                   extraSpecialArgs = {
                     inherit inputs;
@@ -140,6 +141,7 @@
                 home-manager = {
                   useGlobalPkgs = true;
                   useUserPackages = true;
+                  backupFileExtension = "backup";
                   users.${username} = import ../home/darwin;
                   extraSpecialArgs = {
                     inherit inputs;

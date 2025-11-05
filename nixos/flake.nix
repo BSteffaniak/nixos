@@ -55,6 +55,7 @@
                 home-manager = {
                   useGlobalPkgs = true;
                   useUserPackages = true;
+                  backupFileExtension = "backup";
                   users.braden = {
                     imports = [
                       ../home/nixos # Generic base config
