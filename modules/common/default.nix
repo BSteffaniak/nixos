@@ -43,7 +43,6 @@ with lib;
       wget
       clang
       glib
-      ra-multiplex-latest
       nvd
     ];
   };

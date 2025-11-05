@@ -25,6 +25,8 @@ with lib;
       cargo-binstall
       cargo-nextest
       cargo-lambda
+
+      ra-multiplex-latest
     ];
   };
 }
