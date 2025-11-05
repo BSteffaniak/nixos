@@ -11,28 +11,17 @@ with lib;
   options.homeModules.fish = {
     enable = mkEnableOption "Fish shell configuration";
 
+    # Low-level options for custom use
     aliases = mkOption {
       type = types.attrsOf types.str;
       default = { };
-      description = "Fish shell aliases";
-      example = literalExpression ''
-        {
-          ll = "ls -la";
-          gs = "git status";
-          gd = "git diff";
-        }
-      '';
+      description = "Custom fish shell aliases";
     };
 
     functions = mkOption {
       type = types.attrsOf types.str;
       default = { };
-      description = "Fish shell functions";
-      example = literalExpression ''
-        {
-          mkcd = "mkdir -p $argv[1]; and cd $argv[1]";
-        }
-      '';
+      description = "Custom fish shell functions";
     };
 
     shellInit = mkOption {
@@ -77,6 +66,154 @@ with lib;
           ".local/fish/custom.fish"
         ]
       '';
+    };
+
+    # ============================================================
+    # FEATURE-BASED CONFIGURATION
+    # ============================================================
+
+    # Flat Project Configuration
+    flat = {
+      enable = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Enable Flat project tooling";
+      };
+
+      logging = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enable Flat logging functions (requires flat.enable)";
+      };
+
+      airship = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enable Airship/devship wrapper (requires flat.enable and airship package)";
+      };
+    };
+
+    # Zellij Configuration
+    zellij = {
+      enable = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Enable Zellij terminal multiplexer integration";
+      };
+
+      resurrect = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enable session resurrection function (requires zellij.enable)";
+      };
+    };
+
+    # OpenCode Configuration
+    opencode = {
+      enable = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Enable OpenCode development tooling";
+      };
+
+      devMode = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enable development mode runner (requires opencode.enable)";
+      };
+
+      projectPath = mkOption {
+        type = types.str;
+        default = "/hdd/GitHub/opencode";
+        description = "Path to OpenCode project";
+      };
+    };
+
+    # Neovim Configuration
+    neovim = {
+      enable = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enable Neovim-specific features";
+      };
+
+      sessionLoading = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enable nvims function for session loading (requires neovim.enable)";
+      };
+
+      manPages = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enable enhanced man page viewer in nvim (requires neovim.enable)";
+      };
+    };
+
+    # General Utilities
+    utilities = {
+      enable = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enable general utility functions";
+      };
+
+      sessionManagement = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enable reload-session function (requires utilities.enable)";
+      };
+
+      pathManagement = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enable path management utilities (fish_remove_path) - requires utilities.enable";
+      };
+
+      retryCommand = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enable auto-retry command wrapper (requires utilities.enable)";
+      };
+    };
+
+    # Development Tools
+    development = {
+      enable = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Enable development/testing tools";
+      };
+
+      benchmark = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enable terminal rendering benchmark (requires development.enable)";
+      };
+    };
+
+    # Editor Configuration
+    editor = {
+      enable = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enable editor environment variable configuration";
+      };
+
+      nvim = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Set neovim as EDITOR and VISUAL (requires editor.enable)";
+      };
+    };
+
+    # Direnv Integration
+    direnv = {
+      enable = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enable direnv integration for per-directory environments";
+      };
     };
   };
 
