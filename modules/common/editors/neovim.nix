@@ -28,6 +28,9 @@ with lib;
         luajitPackages.luarocks # Lua package manager
         stylua # Lua code formatter
         lua-language-server # Lua language server
+        black # Python code formatter
+        isort # Python import sorter
+        fsautocomplete # (FSAC) F# code completion/LSP
       ]
       ++ (
         # Neovim editor (conditional: nightly or stable)
