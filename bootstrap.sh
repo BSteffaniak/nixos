@@ -383,6 +383,7 @@ elif [ "$PLATFORM" = "darwin" ]; then
     
     # State version
     STATE_VERSION=$(prompt_input "Darwin state version" "6")
+    HOME_MANAGER_STATE_VERSION=$(prompt_input "Home Manager state version" "25.05")
     
     # Set network names
     COMPUTER_NAME=$(prompt_input "Computer name (displayed name)" "$FULL_NAME's $(echo $HOSTNAME | sed 's/-/ /g' | awk '{for(i=1;i<=NF;i++)sub(/./,toupper(substr($i,1,1)),$i)}1')")
@@ -433,6 +434,7 @@ mkdir -p "$SCRIPT_DIR/hosts/$HOSTNAME"
     --git "$ENABLE_GIT" \
     --clitools "$ENABLE_CLITOOLS" \
     --state-version "$STATE_VERSION" \
+    ${HOME_MANAGER_STATE_VERSION:+--home-manager-state-version "$HOME_MANAGER_STATE_VERSION"} \
     ${ENABLE_DESKTOP:+--desktop "$ENABLE_DESKTOP"} \
     ${ENABLE_HYPRLAND:+--hyprland "$ENABLE_HYPRLAND"} \
     ${ENABLE_WAYBAR:+--waybar "$ENABLE_WAYBAR"} \

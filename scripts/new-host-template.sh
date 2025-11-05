@@ -70,6 +70,7 @@ while [[ $# -gt 0 ]]; do
         --applications) ENABLE_APPLICATIONS="$2"; shift 2 ;;
         --computer-name) COMPUTER_NAME="$2"; shift 2 ;;
         --state-version) STATE_VERSION="$2"; shift 2 ;;
+        --home-manager-state-version) HOME_MANAGER_STATE_VERSION="$2"; shift 2 ;;
         *) echo "Unknown option: $1"; exit 1 ;;
     esac
 done
@@ -110,6 +111,7 @@ ENABLE_FISH="${ENABLE_FISH:-true}"
 ENABLE_GIT="${ENABLE_GIT:-true}"
 ENABLE_CLITOOLS="${ENABLE_CLITOOLS:-true}"
 STATE_VERSION="${STATE_VERSION:-24.11}"
+HOME_MANAGER_STATE_VERSION="${HOME_MANAGER_STATE_VERSION:-25.05}"
 
 # Generate the configuration file
 OUTPUT_FILE="$SCRIPT_DIR/hosts/$HOSTNAME/default.nix"
@@ -436,6 +438,7 @@ elif [ "$PLATFORM" = "darwin" ]; then
   myConfig = {
     username = "$USERNAME";
     fullName = "$FULLNAME";
+    homeManagerStateVersion = "$HOME_MANAGER_STATE_VERSION";
 
     # Development tools
     development.rust.enable = $ENABLE_RUST;

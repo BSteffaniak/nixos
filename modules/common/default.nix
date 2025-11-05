@@ -28,6 +28,12 @@ with lib;
       default = "Braden Steffaniak";
       description = "Full name for user";
     };
+
+    homeManagerStateVersion = lib.mkOption {
+      type = lib.types.str;
+      default = "25.05";
+      description = "Home Manager state version";
+    };
   };
 
   config = {

@@ -16,8 +16,8 @@
   home.homeDirectory = lib.mkForce "/Users/${osConfig.myConfig.username}";
 
   # State version should match the Darwin release when home-manager was first used
-  # Darwin state version is an integer, convert from system config
-  home.stateVersion = builtins.toString osConfig.system.stateVersion;
+  # Use the homeManagerStateVersion from host config
+  home.stateVersion = osConfig.myConfig.homeManagerStateVersion;
 
   # Darwin-specific packages
   home.packages = with pkgs; [

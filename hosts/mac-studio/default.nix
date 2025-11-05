@@ -16,6 +16,7 @@
   myConfig = {
     username = "bsteffaniak";
     fullName = "Braden Steffaniak";
+    homeManagerStateVersion = "24.11";
 
     # Development tools
     development.rust.enable = true;
