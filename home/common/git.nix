@@ -12,6 +12,7 @@
     userEmail = "BradenSteffaniak@gmail.com";
     extraConfig = {
       pull.rebase = true;
+      core.autocrlf = "input";
     };
   };
 }
