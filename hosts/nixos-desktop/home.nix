@@ -1,6 +1,5 @@
 # Personal home-manager overrides for nixos-desktop host
-# This file contains Braden's personal preferences and should not be
-# copied when bootstrapping new hosts
+# Contains personal preferences and should not be copied when bootstrapping new hosts
 {
   config,
   lib,

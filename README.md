@@ -1,4 +1,4 @@
-# Braden's Nix Configuration
+# Nix Configuration
 
 Modular, cross-platform Nix configuration supporting NixOS and macOS (nix-darwin).
 

@@ -1,5 +1,5 @@
 {
-  description = "Braden's Darwin (macOS) Configuration";
+  description = "Darwin (macOS) Configuration";
 
   inputs = {
     nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-25.05-darwin";
