@@ -48,6 +48,7 @@ in
 
     environment.systemPackages = [
       android.androidsdk
+      pkgs.android-studio
     ];
 
     environment.variables = {

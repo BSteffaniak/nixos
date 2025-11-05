@@ -37,6 +37,5 @@
       qalculate-gtk
       libsForQt5.vvave
       kdePackages.elisa
-      android-studio
     ];
 }
