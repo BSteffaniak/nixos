@@ -10,6 +10,7 @@
     ./homebrew.nix
     ./system-defaults.nix
     ./applications.nix
+    ./ssh.nix
   ];
 
   config = {

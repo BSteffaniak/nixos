@@ -32,6 +32,8 @@
     # Shell and editors
     shell.fish.enable = true;
     shell.git.enable = true;
+    shell.ssh.enable = true;
+    shell.ssh.server.enable = true;
     editors.neovim.enable = true;
     editors.neovim.useNightly = true;
 

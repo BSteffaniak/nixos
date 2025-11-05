@@ -15,11 +15,6 @@ with lib;
       default = "nixos";
       description = "System hostname";
     };
-    enableSSH = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Enable SSH server";
-    };
     allowedTCPPorts = mkOption {
       type = types.listOf types.int;
       default = [ ];
@@ -57,18 +52,6 @@ with lib;
       networkmanagerapplet
       wirelesstools
     ];
-
-    services.openssh = mkIf config.myConfig.system.networking.enableSSH {
-      enable = true;
-      ports = [ 22 ];
-      settings = {
-        PasswordAuthentication = true;
-        AllowUsers = [ config.myConfig.username ];
-        UseDns = true;
-        X11Forwarding = false;
-        PermitRootLogin = "prohibit-password";
-      };
-    };
 
     services.printing.enable = true;
   };

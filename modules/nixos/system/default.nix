@@ -13,6 +13,7 @@ with lib;
     ./security.nix
     ./audio.nix
     ./locale.nix
+    ./ssh.nix
   ];
 
   options.myConfig.system = {

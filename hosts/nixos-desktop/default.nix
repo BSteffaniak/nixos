@@ -49,6 +49,8 @@
     # Shell and editors
     shell.fish.enable = true;
     shell.git.enable = true;
+    shell.ssh.enable = true;
+    shell.ssh.server.enable = true;
     editors.neovim.enable = true;
     editors.neovim.useNightly = true;
 
@@ -66,7 +68,6 @@
     system.enable = true;
     system.networking.enable = true;
     system.networking.hostName = "nixos";
-    system.networking.enableSSH = true;
     system.security.enable = true;
     system.audio.enable = true;
     system.locale.enable = true;

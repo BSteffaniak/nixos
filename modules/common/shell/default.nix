@@ -11,6 +11,7 @@ with lib;
   imports = [
     ./fish.nix
     ./git.nix
+    ./ssh.nix
   ];
 
   options.myConfig.shell = {
