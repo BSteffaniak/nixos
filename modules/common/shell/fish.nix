@@ -28,6 +28,7 @@ with lib;
 
     # Install bass plugin - Fish automatically discovers it
     environment.systemPackages = with pkgs; [
+      python3
       fishPlugins.bass
     ];
   };
