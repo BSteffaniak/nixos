@@ -2,17 +2,20 @@
   config,
   lib,
   pkgs,
+  osConfig,
   ...
 }:
 
+with lib;
+
 {
-  programs.git = {
+  # Only configure git when system has git enabled (myConfig.shell.git.enable)
+  # This provides per-user git configuration with sensible defaults
+  # Override in host-specific home.nix files using homeModules.git options
+  homeModules.git = mkIf osConfig.myConfig.shell.git.enable {
     enable = true;
-    userName = "Braden Steffaniak";
-    userEmail = "BradenSteffaniak@gmail.com";
-    extraConfig = {
-      pull.rebase = true;
-      core.autocrlf = "input";
-    };
+    # userName defaults to "Braden Steffaniak"
+    # userEmail defaults to "BradenSteffaniak@gmail.com"
+    # extraConfig defaults to { pull.rebase = true; core.autocrlf = "input"; }
   };
 }
