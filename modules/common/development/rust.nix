@@ -17,12 +17,14 @@ let
       hasNightly = cfg.includeNightly;
 
       # Base cargo utilities
-      cargoUtils = with pkgs; [
-        cargo-binstall
-        cargo-nextest
-        cargo-lambda
-        ra-multiplex-latest
-      ];
+      cargoUtils =
+        with pkgs;
+        [
+          cargo-binstall
+          cargo-nextest
+          cargo-lambda
+        ]
+        ++ (optional cfg.includeRaMultiplex ra-multiplex-latest);
 
       # Rust toolchain packages based on configuration
       rustToolchains =
@@ -66,6 +68,16 @@ in
       type = types.bool;
       default = false;
       description = "Include Rust nightly toolchain";
+    };
+
+    includeRaMultiplex = mkOption {
+      type = types.bool;
+      default = true;
+      description = ''
+        Include ra-multiplex (rust-analyzer multiplexer).
+        Useful for managing multiple rust-analyzer instances in monorepos.
+        Set to false if you don't need this tool.
+      '';
     };
   };
 
