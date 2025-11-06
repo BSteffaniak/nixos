@@ -9,6 +9,12 @@ with lib;
 
 let
   cfg = config.myConfig.development.dotnet;
+
+  # Import custom multi-SDK builder for cross-SDK test execution
+  buildMultiSdk = import ./dotnet-multi-sdk.nix {
+    inherit lib;
+    inherit (pkgs) stdenv symlinkJoin;
+  };
 in
 {
   options.myConfig.development.dotnet = {
@@ -38,7 +44,20 @@ in
       description = ''
         List of .NET SDK versions to install.
         Empty list defaults to latest stable (8).
-        Multiple versions will be combined into a single package.
+        Multiple versions will be combined using dotnetCorePackages.combinePackages.
+
+        IMPORTANT: When multiple SDKs are installed, .NET CLI will use the HIGHEST version
+        by default. To select a specific SDK for a project, create a global.json file:
+
+          {
+            "sdk": {
+              "version": "8.0.400",
+              "rollForward": "latestFeature"
+            }
+          }
+
+        The SDK version determines CLI behavior, NOT the target framework. You can use
+        SDK 10 to build net8.0 projects. SDK selection is independent of framework targeting.
       '';
       example = [
         "8"
@@ -199,6 +218,36 @@ in
       }
     ];
 
+    # Warnings for common misconfigurations
+    warnings =
+      (optional
+        (
+          cfg.aspnetcore.enable
+          && cfg.aspnetcore.versions != [ ]
+          && cfg.sdkVersions != [ ]
+          && !(all (v: elem v cfg.sdkVersions) cfg.aspnetcore.versions)
+        )
+        "ASP.NET Core versions ${toString cfg.aspnetcore.versions} don't match SDK versions ${toString cfg.sdkVersions}. Consider matching them for consistency."
+      )
+      ++ (optional (length cfg.sdkVersions > 1) ''
+        Multiple .NET SDK versions configured: ${toString cfg.sdkVersions}
+
+        SDK Behavior:
+        - The CLI will default to the HIGHEST version (${last cfg.sdkVersions})
+        - Custom multi-SDK package ensures all runtimes are available to all SDKs
+        - Any SDK can build and test projects targeting any framework version
+        - Cross-SDK test execution works (e.g., SDK 10 can run net8.0/net9.0 tests)
+
+        To select a specific SDK for a project, use global.json:
+          {
+            "sdk": {
+              "version": "${if elem "8" cfg.sdkVersions then "8.0.400" else "9.0.100"}",
+              "rollForward": "latestFeature"
+            }
+          }
+      '');
+
+    # Calculate dotnet packages (shared between systemPackages and environment variables)
     environment.systemPackages =
       with pkgs;
       let
@@ -247,9 +296,18 @@ in
             map (v: aspnetcoreMap.${v}) cfg.aspnetcore.versions;
 
         # Combine multiple SDKs/Runtimes if needed
+        # When multiple SDKs are configured, use custom builder that physically copies
+        # all runtimes into each SDK location. This enables cross-SDK test execution
+        # (e.g., SDK 10 can run tests for net8.0/net9.0 projects).
+        #
+        # Standard combinePackages uses symlinks which get resolved at runtime,
+        # causing test hosts to only find runtimes in their own SDK location.
         combinedSdk =
           if length selectedSdks > 1 then
-            dotnetCorePackages.combinePackages selectedSdks
+            buildMultiSdk {
+              sdks = selectedSdks;
+              runtimes = selectedSdks; # SDKs include their runtimes
+            }
           else
             head selectedSdks;
 
@@ -260,10 +318,13 @@ in
             head selectedRuntimes;
 
         # Choose SDK or Runtime-only
+        # IMPORTANT: This package is also used for DOTNET_ROOT environment variable
         dotnetPackage = if cfg.runtimeOnly then combinedRuntime else combinedSdk;
 
         # ASP.NET Core packages
-        aspnetcorePackages = optionals cfg.aspnetcore.enable selectedAspnetcore;
+        # Only install standalone ASP.NET Core packages in runtime-only mode
+        # In SDK mode, ASP.NET Core runtimes are already included in the SDK
+        aspnetcorePackages = optionals (cfg.aspnetcore.enable && cfg.runtimeOnly) selectedAspnetcore;
 
         # Entity Framework
         efPackages = optional cfg.entityFramework.enable dotnet-ef;
@@ -280,6 +341,8 @@ in
 
       in
       [ dotnetPackage ]
+      # Note: In SDK mode, ASP.NET Core runtimes are already included in SDKs
+      # aspnetcorePackages only added in runtime-only mode
       ++ aspnetcorePackages
       ++ efPackages
       ++ globalToolPackages
@@ -310,16 +373,65 @@ in
     );
 
     # Telemetry and CLI environment configuration
-    environment.variables = mkMerge [
-      (mkIf cfg.telemetry.optOut {
-        DOTNET_CLI_TELEMETRY_OPTOUT = "1";
-      })
-      (mkIf cfg.telemetry.skipFirstTimeExperience {
-        DOTNET_SKIP_FIRST_TIME_EXPERIENCE = "1";
-      })
-      (mkIf cfg.telemetry.disableLogo {
-        DOTNET_NOLOGO = "1";
-      })
-    ];
+    environment.variables =
+      with pkgs;
+      let
+        # Recalculate dotnet package for DOTNET_ROOT (same logic as systemPackages)
+        sdkMap = {
+          "6" = dotnet-sdk_6;
+          "7" = dotnet-sdk_7;
+          "8" = dotnet-sdk_8;
+          "9" = dotnet-sdk_9;
+          "10" = dotnet-sdk_10;
+        };
+        runtimeMap = {
+          "6" = dotnet-runtime_6;
+          "7" = dotnet-runtime_7;
+          "8" = dotnet-runtime_8;
+          "9" = dotnet-runtime_9;
+          "10" = dotnet-runtime_10;
+        };
+        selectedSdks =
+          if cfg.sdkVersions == [ ] then [ dotnet-sdk ] else map (v: sdkMap.${v}) cfg.sdkVersions;
+        selectedRuntimes =
+          if cfg.runtimeVersions == [ ] then
+            [ dotnet-runtime ]
+          else
+            map (v: runtimeMap.${v}) cfg.runtimeVersions;
+        combinedSdk =
+          if length selectedSdks > 1 then
+            buildMultiSdk {
+              sdks = selectedSdks;
+              runtimes = selectedSdks; # SDKs include their runtimes
+            }
+          else
+            head selectedSdks;
+        combinedRuntime =
+          if length selectedRuntimes > 1 then
+            dotnetCorePackages.combinePackages selectedRuntimes
+          else
+            head selectedRuntimes;
+        dotnetPackage = if cfg.runtimeOnly then combinedRuntime else combinedSdk;
+      in
+      mkMerge [
+        (mkIf cfg.enable {
+          # Set DOTNET_ROOT to the combined package location
+          # This ensures .NET runtime host can find all installed SDK and runtime versions
+          DOTNET_ROOT = "${dotnetPackage}/share/dotnet";
+
+          # Enable multi-level lookup to search for runtimes in multiple locations
+          # This allows SDK 10 to find runtime 9.x and 8.x for cross-SDK test execution
+          DOTNET_MULTILEVEL_LOOKUP = "1";
+        })
+        (mkIf cfg.telemetry.optOut {
+          DOTNET_CLI_TELEMETRY_OPTOUT = "1";
+        })
+        (mkIf cfg.telemetry.skipFirstTimeExperience {
+          DOTNET_SKIP_FIRST_TIME_EXPERIENCE = "1";
+        })
+        (mkIf cfg.telemetry.disableLogo {
+          DOTNET_NOLOGO = "1";
+        })
+      ];
   };
 }
