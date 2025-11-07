@@ -24,27 +24,34 @@ let
         ++ (optional cfg.cargoTools.includeLambda cargo-lambda)
         ++ (optional cfg.cargoTools.includeRaMultiplex ra-multiplex-latest);
 
+      # Build toolchains with rust-src configuration
+      stableToolchain = pkgs.mkRustStable { includeRustSrc = cfg.includeRustSrc; };
+      nightlyToolchain = pkgs.mkRustNightly { includeRustSrc = cfg.includeRustSrc; };
+
       # Rust toolchain packages based on configuration
       rustToolchains =
         if hasStable && hasNightly then
           # Both stable and nightly: use wrappers
-          with pkgs;
           [
-            cargo-wrapped
-            rustc-wrapped
-            rustStable # Keep stable for rust-analyzer
+            (pkgs.mkCargoWrapper {
+              rustStable = stableToolchain;
+              rustNightly = nightlyToolchain;
+            })
+            (pkgs.mkRustcWrapper {
+              rustStable = stableToolchain;
+              rustNightly = nightlyToolchain;
+            })
+            stableToolchain # Keep stable for rust-analyzer
           ]
         else if hasStable then
           # Stable only: use direct packages
-          with pkgs;
           [
-            rustStable
+            stableToolchain
           ]
         else if hasNightly then
           # Nightly only: use direct packages
-          with pkgs;
           [
-            rustNightly
+            nightlyToolchain
           ]
         else
           # Neither enabled: empty list
@@ -66,6 +73,18 @@ in
       type = types.bool;
       default = false;
       description = "Include Rust nightly toolchain";
+    };
+
+    includeRustSrc = mkOption {
+      type = types.bool;
+      default = true;
+      description = ''
+        Include rust-src component in the Rust toolchain.
+        This provides Rust standard library source code, which is needed for:
+        - IDE features like "go to definition" for standard library items
+        - Cross-compilation
+        - Building the standard library from source
+      '';
     };
 
     cargoTools = {
