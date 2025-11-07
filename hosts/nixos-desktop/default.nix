@@ -108,7 +108,7 @@
   # System packages specific to this host
   environment.systemPackages = with pkgs; [
     inputs.home-manager.packages."${pkgs.system}".default
-    bpf-linker
+    unstable.bpf-linker
   ];
 
   # Fonts
