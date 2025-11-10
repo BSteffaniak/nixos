@@ -321,6 +321,26 @@ in
         # IMPORTANT: This package is also used for DOTNET_ROOT environment variable
         dotnetPackage = if cfg.runtimeOnly then combinedRuntime else combinedSdk;
 
+        # Override fsautocomplete to use the multi-SDK instead of default .NET 8-only SDK
+        # This gives fsautocomplete access to .NET 8, 9, and 10 runtimes based on enabled SDKs
+        # Only override in SDK mode (fsautocomplete requires SDK to function)
+        fsautocompleteWithMultiSdk =
+          if cfg.runtimeOnly then
+            unstable.fsautocomplete
+          else
+            unstable.fsautocomplete.overrideAttrs (oldAttrs: {
+              # CRITICAL: Disable dotnetFromEnv to prevent it from overwriting DOTNET_ROOT
+              # The upstream package has useDotnetFromEnv=true which searches for dotnet in PATH
+              # and sets DOTNET_ROOT dynamically, but we need to force it to use our multi-SDK
+              useDotnetFromEnv = false;
+
+              postFixup = (oldAttrs.postFixup or "") + ''
+                # Override DOTNET_ROOT to use our multi-SDK with all enabled runtimes
+                wrapProgram $out/bin/fsautocomplete \
+                  --set DOTNET_ROOT "${combinedSdk}/share/dotnet"
+              '';
+            });
+
         # ASP.NET Core packages
         # Only install standalone ASP.NET Core packages in runtime-only mode
         # In SDK mode, ASP.NET Core runtimes are already included in the SDK
@@ -347,8 +367,8 @@ in
       ++ efPackages
       ++ globalToolPackages
       ++ [
-        fsautocomplete # F# LSP (FSAC)
         csharp-ls
+        fsautocompleteWithMultiSdk # F# LSP (FSAC) with multi-SDK support
       ];
 
     # NuGet configuration
