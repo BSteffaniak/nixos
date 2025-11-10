@@ -109,6 +109,8 @@
   environment.systemPackages = with pkgs; [
     inputs.home-manager.packages."${pkgs.system}".default
     unstable.bpf-linker
+    unstable.bpftools
+    unstable.nftables
   ];
 
   # Fonts
