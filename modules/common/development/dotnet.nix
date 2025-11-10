@@ -348,6 +348,7 @@ in
       ++ globalToolPackages
       ++ [
         fsautocomplete # F# LSP (FSAC)
+        csharp-ls
       ];
 
     # NuGet configuration
