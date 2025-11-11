@@ -73,15 +73,6 @@ let
   };
 
   # ============================================================
-  # OPENCODE CONFIGURATION
-  # ============================================================
-  opencodeFunctions = optionalAttrs (fishCfg.opencode.enable && fishCfg.opencode.devMode) {
-    opencode-dev = ''
-      bun run --conditions=development ${fishCfg.opencode.projectPath}/packages/opencode/src/index.ts $argv
-    '';
-  };
-
-  # ============================================================
   # NEOVIM CONFIGURATION
   # ============================================================
   neovimFunctions = optionalAttrs fishCfg.neovim.enable (
@@ -212,7 +203,6 @@ in
         functions = mkMerge [
           flatFunctions
           zellijFunctions
-          opencodeFunctions
           neovimFunctions
           utilitiesFunctions
           developmentFunctions

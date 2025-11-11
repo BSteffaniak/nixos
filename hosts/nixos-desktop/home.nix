@@ -41,7 +41,6 @@
     # OpenCode
     opencode = {
       enable = true;
-      devMode = false;
       projectPath = "/hdd/GitHub/opencode";
     };
 
