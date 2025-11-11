@@ -19,6 +19,10 @@
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    opencode-release-info = {
+      url = "https://api.github.com/repos/sst/opencode/releases/latest";
+      flake = false;
+    };
   };
 
   outputs =
@@ -47,6 +51,7 @@
                 inherit nixpkgs-unstable;
                 ra-multiplex-src = inputs.ra-multiplex;
                 rust-overlay = inputs.rust-overlay;
+                opencode-release-info = inputs.opencode-release-info;
               });
             }
             (

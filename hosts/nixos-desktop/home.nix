@@ -41,7 +41,7 @@
     # OpenCode
     opencode = {
       enable = true;
-      devMode = true;
+      devMode = false;
       projectPath = "/hdd/GitHub/opencode";
     };
 
@@ -55,5 +55,6 @@
   # Personal packages
   home.packages = with pkgs; [
     steam
+    opencode-dev
   ];
 }

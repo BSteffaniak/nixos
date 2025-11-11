@@ -1,4 +1,8 @@
-{ nixpkgs-unstable, ra-multiplex-src }:
+{
+  nixpkgs-unstable,
+  ra-multiplex-src,
+  opencode-release-info ? null,
+}:
 [
   (final: prev: {
     unstable = import nixpkgs-unstable {
@@ -18,3 +22,9 @@
     };
   })
 ]
+++ (
+  if opencode-release-info != null then
+    import ./opencode-overlay.nix { inherit opencode-release-info; }
+  else
+    [ ]
+)
