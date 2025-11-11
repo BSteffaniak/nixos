@@ -2,7 +2,7 @@
   nixpkgs-unstable,
   ra-multiplex-src,
   rust-overlay,
-  opencode-release-info,
+  opencode-release-info ? null,
 }:
 # Import shared Rust overlay from lib/
 (import ../lib/rust-overlay.nix { inherit rust-overlay; })
