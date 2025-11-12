@@ -66,10 +66,18 @@
     development.ra-multiplex.enable = true;
 
     # DevOps tool configs
-    devops.github.enable = true;
+    devops.github = {
+      enable = true;
+      username = "BSteffaniak";
+      gitProtocol = "ssh";
+    };
 
     # Desktop utility configs
-    desktop.utilities.enable = true;
+    desktop.utilities = {
+      enable = true;
+      wallpaperFolder = "/hdd/wallpapers";
+      defaultWallpaper = "pexels-pok-rie-33563-982263.jpg";
+    };
   };
 
   # Personal packages

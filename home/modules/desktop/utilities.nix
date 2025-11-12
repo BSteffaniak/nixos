@@ -9,6 +9,35 @@ with lib;
 
 let
   cfg = config.myConfig.desktop.utilities;
+
+  # Generate waypaper config.ini with configurable wallpaper folder
+  waypaperConfig = {
+    Settings = {
+      language = "en";
+      folder = cfg.wallpaperFolder;
+      backend = "swww";
+      monitors = "All";
+      fill = "fill";
+      sort = "name";
+      color = "#ffffff";
+      subfolders = false;
+      number_of_columns = 3;
+      post_command = "";
+      show_hidden = false;
+      show_gifs_only = false;
+      swww_transition_type = "simple";
+      swww_transition_step = 90;
+      swww_transition_angle = 0;
+      swww_transition_duration = 2;
+      swww_transition_fps = 60;
+      use_xdg_state = false;
+      wallpaper = "${cfg.wallpaperFolder}/${cfg.defaultWallpaper}";
+      show_path_in_tooltip = true;
+      all_subfolders = false;
+      mpvpaper_sound = false;
+      mpvpaper_options = "";
+    };
+  };
 in
 {
   options.myConfig.desktop.utilities = {
@@ -25,6 +54,18 @@ in
       default = true;
       description = "Enable Waypaper wallpaper manager configuration";
     };
+
+    wallpaperFolder = mkOption {
+      type = types.str;
+      default = "$HOME/Pictures/wallpapers";
+      description = "Path to wallpapers folder (set per-host for hardware-specific paths)";
+    };
+
+    defaultWallpaper = mkOption {
+      type = types.str;
+      default = "";
+      description = "Default wallpaper filename (relative to wallpaperFolder)";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -35,7 +76,7 @@ in
       };
 
       "waypaper/config.ini" = mkIf cfg.waypaper {
-        source = ../../../configs/waypaper/config.ini;
+        text = lib.generators.toINI { } waypaperConfig;
       };
 
       "waypaper/random-wallpaper.sh" = mkIf cfg.waypaper {
