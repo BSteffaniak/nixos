@@ -48,8 +48,10 @@ in
       runroot = "$HOME/.local/share/containers/storage"
       graphroot = "$HOME/.local/share/containers/storage"
 
-      [storage.options.overlay]
-      mount_program = "${pkgs.fuse-overlayfs}/bin/fuse-overlayfs"
+      ${optionalString pkgs.stdenv.isLinux ''
+        [storage.options.overlay]
+        mount_program = "${pkgs.fuse-overlayfs}/bin/fuse-overlayfs"
+      ''}
     '';
 
     # Configure container registries
