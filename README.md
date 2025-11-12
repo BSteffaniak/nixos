@@ -1,15 +1,25 @@
 # Nix Configuration
 
-Modular, cross-platform Nix configuration supporting NixOS and macOS (nix-darwin).
+Modular, cross-platform Nix configuration supporting **NixOS**, **macOS (nix-darwin)**, and **standalone systems (Ubuntu, etc.)** via Home Manager.
 
-## Split Flake Design
+## Architecture Overview
 
-This repository uses **two separate flakes** in subdirectories to optimize dependencies:
+This repository uses a **home-manager-first architecture** that enables:
+- ✅ Full NixOS system configurations
+- ✅ macOS (Darwin) system configurations with Homebrew
+- ✅ **Standalone home-manager** for Ubuntu and other Linux distros
+- ✅ Consistent development environments across all platforms
+- ✅ Rootless containers (Podman) without system-level Docker
 
-- **`nixos/flake.nix`** - NixOS configurations only (no Darwin/Homebrew dependencies)
-- **`darwin/flake.nix`** - macOS (Darwin) configurations with Homebrew integration
+## Flake Design
 
-This ensures that building NixOS configurations doesn't download unnecessary Darwin-specific inputs like Homebrew repositories.
+This repository uses **three flakes** for different use cases:
+
+- **`flake.nix`** (root) - Standalone home-manager configurations for Ubuntu, etc.
+- **`nixos/flake.nix`** - NixOS system configurations (no Darwin dependencies)
+- **`darwin/flake.nix`** - macOS (Darwin) system configurations with Homebrew
+
+This ensures optimal dependency management and enables using this config on non-NixOS systems.
 
 ## Structure
 
@@ -63,12 +73,38 @@ This ensures that building NixOS configurations doesn't download unnecessary Dar
 The `rebuild.sh` script automatically detects your platform and uses the correct flake.
 
 ```bash
+# Compare changes before rebuilding (recommended!)
+./rebuild.sh --diff
+
 # Auto-detect and rebuild
 ./rebuild.sh
+
+# Boot into new config (NixOS only)
+./rebuild.sh --boot
 
 # On NixOS: uses nixos#nixos-desktop
 # On Darwin: uses darwin#macbook-air or mac-studio
 ```
+
+### Diff Mode (Preview Changes)
+
+The `--diff` (or `--compare`) flag builds your configuration and shows what would change **without applying** it:
+
+```bash
+# See what would change
+./rebuild.sh --diff
+
+# Output shows:
+# - New packages being added
+# - Packages being updated (with version changes)
+# - Packages being removed
+# - Total closure size change
+
+# Then apply if you like the changes
+./rebuild.sh
+```
+
+This uses `nvd` (nix version diff) to provide a clear summary of changes. If `nvd` isn't installed, it falls back to `nix store diff-closures`.
 
 ### Manual Usage
 
@@ -97,9 +133,41 @@ darwin-rebuild switch --flake ./darwin#macbook-air
 
 ## Available Hosts
 
+### NixOS Systems
 - **nixos-desktop**: NixOS desktop PC with NVIDIA GPU, Hyprland, development tools
+
+### macOS Systems  
 - **macbook-air**: MacBook Air (Apple Silicon) with development tools
 - **mac-studio**: Mac Studio with development tools
+
+### Standalone Home Manager (Ubuntu, etc.)
+- **ubuntu-laptop**: Ubuntu laptop with home-manager only (see [UBUNTU-SETUP.md](UBUNTU-SETUP.md))
+
+## Using on Ubuntu or Other Linux Distros
+
+This configuration can be used on Ubuntu or any Linux distro via standalone home-manager! 
+
+**Quick start:**
+```bash
+# Install Nix
+sh <(curl -L https://nixos.org/nix/install) --daemon
+
+# Clone this repo
+git clone <your-repo-url> ~/.config/nixos
+
+# Apply the configuration
+nix run home-manager/release-25.05 -- switch --flake ~/.config/nixos#braden@ubuntu-laptop
+```
+
+See [UBUNTU-SETUP.md](UBUNTU-SETUP.md) for detailed Ubuntu setup instructions.
+
+**What you get:**
+- All development tools (Rust, Node.js, Go, Python, etc.)
+- Rootless Podman for containers (Docker-compatible!)
+- DevOps tools (kubectl, helm, terraform, aws-cli)
+- Complete shell setup (fish, git, ssh, neovim)
+- All CLI utilities
+- No sudo required for package management!
 
 ## Customization
 
@@ -316,24 +384,31 @@ Understanding where to add packages based on their purpose and scope:
 
 ### After Adding Packages
 
-1. Rebuild to test:
+1. Preview changes before applying:
 
    ```bash
-   sudo nixos-rebuild build --flake ./nixos#nixos-desktop  # NixOS
-   # or
-   darwin-rebuild build --flake ./darwin#macbook-air  # Darwin
+   ./rebuild.sh --diff
    ```
 
-2. Compare what changed:
-
-   ```bash
-   nvd diff /run/current-system ./result
-   ```
-
-3. Apply if satisfied:
+2. Apply if satisfied:
    ```bash
    ./rebuild.sh
    ```
+
+**Alternative (manual):**
+
+```bash
+# Build without applying
+sudo nixos-rebuild build --flake ./nixos#nixos-desktop  # NixOS
+# or
+darwin-rebuild build --flake ./darwin#macbook-air  # Darwin
+
+# Compare what changed
+nvd diff /run/current-system ./result
+
+# Apply
+./rebuild.sh
+```
 
 ## Adding a New Host
 
@@ -511,6 +586,53 @@ cd ..
 ```
 
 ## Helper Scripts
+
+### `rebuild.sh`
+
+Auto-detecting rebuild script that identifies your host and uses the correct flake configuration. Supports preview mode to see changes before applying.
+
+**Usage:**
+
+```bash
+# Preview changes before rebuilding
+./rebuild.sh --diff
+
+# Apply changes
+./rebuild.sh
+
+# Boot into new config (NixOS only)
+./rebuild.sh --boot
+
+# Pass additional nix flags
+./rebuild.sh --diff --show-trace
+```
+
+**Features:**
+- Automatically detects hostname and selects correct flake
+- `--diff` or `--compare` mode builds configuration and shows changes using nvd
+- Falls back to `nix store diff-closures` if nvd is not available
+- Supports all standard nixos-rebuild/darwin-rebuild flags
+
+### `fmt.sh`
+
+Format all Nix files in the repository using nixfmt. Supports check mode for CI/pre-commit hooks.
+
+**Usage:**
+
+```bash
+# Format all Nix files
+./fmt.sh
+
+# Check if files are formatted (exits 1 if formatting needed)
+./fmt.sh --check
+```
+
+**Features:**
+- Formats all 107+ `.nix` files in the repository
+- Excludes `.git/` and `result*` build artifacts
+- Color-coded output showing progress
+- Check mode for CI/CD pipelines
+- Summary statistics at the end
 
 ### `bootstrap.sh`
 
