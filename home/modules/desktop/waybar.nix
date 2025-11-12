@@ -17,8 +17,11 @@ in
   };
 
   config = mkIf cfg.enable {
-    # User-level Waybar configuration will go here
-    # For now, this is a placeholder for future config files
-    home.file.".config/waybar/.keep".text = "";
+    # Symlink standalone waybar config from configs/waybar
+    xdg.configFile = {
+      "waybar/config.jsonc".source = ../../../configs/waybar/config.jsonc;
+      "waybar/style.css".source = ../../../configs/waybar/style.css;
+      "waybar/power_menu.xml".source = ../../../configs/waybar/power_menu.xml;
+    };
   };
 }

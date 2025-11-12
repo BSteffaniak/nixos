@@ -11,5 +11,9 @@
     ./dotnet.nix
     ./android.nix
     ./openssl.nix
+    ./lazygit.nix
+    ./act.nix
+    ./opencode.nix
+    ./ra-multiplex.nix
   ];
 }

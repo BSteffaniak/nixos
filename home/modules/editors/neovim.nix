@@ -53,6 +53,12 @@ in
       VISUAL = "nvim";
     };
 
+    # Symlink standalone neovim config from configs/neovim
+    xdg.configFile."nvim" = {
+      source = ../../../configs/neovim;
+      recursive = true;
+    };
+
     # Enable the fish neovim integration if fish is enabled
     homeModules.fish.neovim.enable = mkIf config.programs.fish.enable true;
   };

@@ -1,0 +1,49 @@
+# Create a directory
+mkdir ~/tmux-install
+cd ~/tmux-install
+
+[ ! -d "utf8proc" ] && git clone --depth 1 https://github.com/JuliaStrings/utf8proc
+cd utf8proc
+sudo make install
+cd ..
+
+brew install jq
+
+TMUX_DOWNLOAD_URL=$(curl -s https://api.github.com/repos/tmux/tmux/releases/latest | jq -r '.assets[] | select(.name | test("tmux-.+\\.tar.gz")) | .browser_download_url')
+TMUX_ASSET=$(echo $TMUX_DOWNLOAD_URL | sed -n "s/^.*\/\(.*$\)/\1/p")
+TMUX_DIR=$(echo $TMUX_ASSET | sed -n "s/\(tmux-.*\).tar.gz/\1/p")
+
+# Get the files
+curl -OL https://www.openssl.org/source/openssl-1.0.2l.tar.gz
+curl -OL $TMUX_DOWNLOAD_URL
+curl -OL https://github.com/libevent/libevent/releases/download/release-2.0.22-stable/libevent-2.0.22-stable.tar.gz
+
+# Extract them
+tar xzf openssl-1.0.2l.tar.gz
+tar xzf $TMUX_ASSET
+tar xzf libevent-2.0.22-stable.tar.gz
+
+# Compile openssl
+echo "======== Compiling openssl ========"
+cd openssl-1.0.2l
+./Configure darwin64-x86_64-cc --prefix=/usr/local --o
+make CFLAGS='-I/usr/local/ssl/include'
+make test
+sudo make install
+echo "======== Finished compiling openssl ========"
+
+# Compile libevent
+echo "======== Compiling libevent ========"
+cd ../libevent-2.0.22-stable
+./configure 
+make
+sudo make install
+echo "======== Finished compiling libevent ========"
+
+# Compile tmux
+echo "======== Compiling tmux ========"
+cd ../$TMUX_DIR
+LDFLAGS="-L/usr/local/lib" CPPFLAGS="-I/usr/local/include" LIBS="-lresolv" ./configure --prefix=/usr/local --enable-utf8proc
+make
+sudo make install
+echo "======== Finished compiling tmux ========"

@@ -68,6 +68,58 @@ This ensures optimal dependency management and enables using this config on non-
     └── default.nix
 ```
 
+## Standalone Config Installation
+
+All configurations in `configs/` are portable and can be used **without Nix** on any system (Windows, Linux, macOS).
+
+### Quick Install (Any Config, Any OS)
+
+Using the helper script:
+```bash
+# Download and run installer
+curl -fsSL https://raw.githubusercontent.com/BSteffaniak/nixos-config/main/install-config.sh | bash -s neovim
+
+# Or clone and use locally
+git clone https://github.com/BSteffaniak/nixos-config.git
+cd nixos-config
+./install-config.sh neovim
+```
+
+### Manual Install (Git Sparse Checkout)
+
+```bash
+# Clone with sparse checkout (downloads only what you need)
+git clone --filter=blob:none --sparse https://github.com/BSteffaniak/nixos-config.git
+cd nixos-config
+
+# Checkout specific config
+git sparse-checkout set configs/neovim
+
+# Copy to your system
+cp -r configs/neovim ~/.config/nvim
+```
+
+### Available Standalone Configs
+
+- `neovim` - Neovim editor with lazy.nvim and LSP
+- `hyprland` - Hyprland window manager
+- `waybar` - Waybar status bar
+- `ghostty` - Ghostty terminal emulator
+- `tmux` - Tmux terminal multiplexer with plugins
+- `wezterm` - WezTerm terminal emulator
+- `zellij` - Zellij terminal workspace
+- `lazygit` - LazyGit TUI
+- `bottom` - Bottom system monitor
+- `gh` - GitHub CLI and gh-dash
+- `opencode` - OpenCode AI assistant configuration
+- `ra-multiplex` - Rust Analyzer multiplexer
+- `fuzzel` - Fuzzel application launcher
+- `waypaper` - Waypaper wallpaper manager
+- `act` - GitHub Actions locally
+- `htop` - htop system monitor
+
+Each config works standalone and can be cloned/used independently.
+
 ## Quick Start
 
 The `rebuild.sh` script automatically detects your platform and uses the correct flake.

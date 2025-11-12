@@ -11,6 +11,18 @@ with lib;
 {
   options.myConfig.desktop.hyprland = {
     enable = mkEnableOption "Hyprland window manager";
+
+    monitorsConfig = mkOption {
+      type = types.nullOr types.path;
+      default = null;
+      description = "Path to host-specific monitors.conf";
+    };
+
+    workspacesConfig = mkOption {
+      type = types.nullOr types.path;
+      default = null;
+      description = "Path to host-specific workspaces.conf";
+    };
   };
 
   config = mkIf config.myConfig.desktop.hyprland.enable {

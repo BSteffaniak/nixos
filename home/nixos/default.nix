@@ -52,7 +52,12 @@
     cliTools.enable = osConfig.myConfig.cliTools.enable or false;
 
     # Desktop (only configs, compositor installed at system level)
-    desktop.hyprland.enable = osConfig.myConfig.desktop.hyprland.enable or false;
+    desktop.hyprland = {
+      enable = osConfig.myConfig.desktop.hyprland.enable or false;
+      # Host-specific configs (set by host if needed)
+      monitorsConfig = osConfig.myConfig.desktop.hyprland.monitorsConfig or null;
+      workspacesConfig = osConfig.myConfig.desktop.hyprland.workspacesConfig or null;
+    };
     desktop.waybar.enable = osConfig.myConfig.desktop.waybar.enable or false;
   };
 

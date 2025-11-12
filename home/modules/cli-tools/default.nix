@@ -11,6 +11,12 @@ let
   cfg = config.myConfig.cliTools;
 in
 {
+  imports = [
+    ./bottom.nix
+    ./htop.nix
+    ./terminals.nix
+    ./tmux.nix
+  ];
   options.myConfig.cliTools = {
     enable = mkEnableOption "CLI tools and utilities";
   };

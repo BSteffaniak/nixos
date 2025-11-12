@@ -1,0 +1,15 @@
+sudo apt-get -y install jq libncurses-dev bison flex libevent-dev build-essential autoconf libtool libssl-dev python3-pkgconfig libcurl4-gnutls-dev
+
+if [[ -d "$HOME/.local/tmux-install" ]]; then
+    git -C "$HOME/.local/tmux-install" pull
+else
+    git clone https://github.com/tmux/tmux "$HOME/.local/tmux-install"
+fi
+
+# Compile tmux
+echo "======== Compiling tmux ========"
+cd ~/.local/tmux-install
+sh autogen.sh
+./configure && make
+ln -s $(pwd)/tmux $HOME/.local/bin/tmux
+echo "======== Finished compiling tmux ========"

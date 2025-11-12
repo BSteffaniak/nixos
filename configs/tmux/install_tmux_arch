@@ -1,0 +1,15 @@
+# Create a directory
+mkdir ~/tmux-install
+cd ~/tmux-install
+
+sudo pacman -Sy jq libncurses-dev bison flex libevent-dev build-essential autoconf libtool libssl-dev python3-pkgconfig libcurl4-gnutls-dev
+
+git clone https://github.com/tmux/tmux ~/.local/tmux-install
+
+# Compile tmux
+echo "======== Compiling tmux ========"
+cd ~/.local/tmux-install
+sh autogen.sh
+./configure && make
+ln -s $(pwd)/tmux $HOME/.local/bin/tmux
+echo "======== Finished compiling tmux ========"

@@ -1,0 +1,8 @@
+background = 000000
+foreground = ffffff
+background-opacity = 0.9
+
+mouse-scroll-multiplier = 0.25
+
+keybind = ctrl+slash=increase_font_size:1
+keybind = ctrl+minus=decrease_font_size:1

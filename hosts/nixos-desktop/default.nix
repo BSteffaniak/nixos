@@ -30,7 +30,12 @@
 
     # Desktop environment
     desktop.enable = true;
-    desktop.hyprland.enable = true;
+    desktop.hyprland = {
+      enable = true;
+      # Host-specific monitor and workspace configuration
+      monitorsConfig = ./hyprland/monitors.conf;
+      workspacesConfig = ./hyprland/workspaces.conf;
+    };
     desktop.waybar.enable = true;
     desktop.gtk.enable = true;
     desktop.xserver.enable = true;
