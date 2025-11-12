@@ -39,7 +39,10 @@ in
     home.packages = with pkgs; [
       fishPlugins.bass
       fishPlugins.done
-      fishPlugins.fzf-fish
+      # Override fzf-fish to skip tests (fishtape not available in build env)
+      (fishPlugins.fzf-fish.overrideAttrs (old: {
+        doCheck = false;
+      }))
     ];
   };
 }
