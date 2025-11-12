@@ -149,7 +149,12 @@
                   useGlobalPkgs = true;
                   useUserPackages = true;
                   backupFileExtension = "backup";
-                  users.${username} = import ../home/darwin;
+                  users.${username} = {
+                    imports = [
+                      ../home/darwin
+                      ../hosts/mac-studio/home.nix
+                    ];
+                  };
                   extraSpecialArgs = {
                     inherit inputs;
                     osConfig = config;

@@ -46,6 +46,10 @@
     darwin.applications.enable = true;
   };
 
+  environment.systemPackages = [
+    inputs.home-manager.packages."${pkgs.system}".default
+  ];
+
   # Networking
   networking.hostName = "Bradens-Mac-Studio";
   networking.computerName = "Braden's Mac Studio";
