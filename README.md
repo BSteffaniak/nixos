@@ -77,11 +77,11 @@ All configurations in `configs/` are portable and can be used **without Nix** on
 Using the helper script:
 ```bash
 # Download and run installer
-curl -fsSL https://raw.githubusercontent.com/BSteffaniak/nixos-config/main/install-config.sh | bash -s neovim
+curl -fsSL https://raw.githubusercontent.com/BSteffaniak/nix-config/master/install-config.sh | bash -s neovim
 
 # Or clone and use locally
-git clone https://github.com/BSteffaniak/nixos-config.git
-cd nixos-config
+git clone https://github.com/BSteffaniak/nix-config.git
+cd nix-config
 ./install-config.sh neovim
 ```
 
@@ -89,8 +89,8 @@ cd nixos-config
 
 ```bash
 # Clone with sparse checkout (downloads only what you need)
-git clone --filter=blob:none --sparse https://github.com/BSteffaniak/nixos-config.git
-cd nixos-config
+git clone --filter=blob:none --sparse https://github.com/BSteffaniak/nix-config.git
+cd nix-config
 
 # Checkout specific config
 git sparse-checkout set configs/neovim
