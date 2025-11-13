@@ -19,6 +19,13 @@ in
     programs.lazygit.enable = true;
 
     # Symlink standalone lazygit config from configs/lazygit
-    xdg.configFile."lazygit/config.yml".source = ../../../configs/lazygit/config.yml;
+    # macOS uses ~/Library/Application Support, Linux uses ~/.config
+    home.file = mkIf pkgs.stdenv.isDarwin {
+      "Library/Application Support/lazygit/config.yml".source = ../../../configs/lazygit/config.yml;
+    };
+
+    xdg.configFile = mkIf (!pkgs.stdenv.isDarwin) {
+      "lazygit/config.yml".source = ../../../configs/lazygit/config.yml;
+    };
   };
 }
