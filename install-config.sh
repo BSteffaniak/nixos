@@ -4,6 +4,7 @@ set -e
 REPO_URL="https://github.com/BSteffaniak/nix-config.git"
 CONFIG_NAME="$1"
 DEST="${2:-$HOME/.config/$CONFIG_NAME}"
+DEST="$(realpath -m "$DEST")"
 
 usage() {
   echo "Usage: $0 <config-name> [destination]"
