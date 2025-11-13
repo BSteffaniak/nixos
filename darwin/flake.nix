@@ -81,6 +81,11 @@
                 ra-multiplex-src = inputs.ra-multiplex;
                 rust-overlay = inputs.rust-overlay;
                 opencode-release-info = inputs.opencode-release-info;
+                # All overlays enabled by default for backward compatibility
+                # Hosts can override by setting myConfig.overlays.* options
+                enableRust = true;
+                enableOpencode = true;
+                enableRaMultiplex = true;
               };
             }
             (
@@ -139,6 +144,11 @@
                 ra-multiplex-src = inputs.ra-multiplex;
                 rust-overlay = inputs.rust-overlay;
                 opencode-release-info = inputs.opencode-release-info;
+                # All overlays enabled by default for backward compatibility
+                # Hosts can override by setting myConfig.overlays.* options
+                enableRust = true;
+                enableOpencode = true;
+                enableRaMultiplex = true;
               };
             }
             (

@@ -2,9 +2,20 @@
   nixpkgs-unstable,
   ra-multiplex-src,
   rust-overlay,
-  opencode-release-info,
+  opencode-release-info ? null,
+  # Optional overlay configuration
+  enableRust ? true,
+  enableOpencode ? true,
+  enableRaMultiplex ? true,
 }:
-# Import shared Rust overlay from lib/
-(import ../lib/rust-overlay.nix { inherit rust-overlay; })
 # Import common overlays from lib/
-++ (import ../lib/overlays.nix { inherit nixpkgs-unstable ra-multiplex-src opencode-release-info; })
+# This now includes all overlays (rust, ra-multiplex, opencode, unstable)
+import ../lib/overlays.nix {
+  inherit
+    nixpkgs-unstable
+    ra-multiplex-src
+    rust-overlay
+    opencode-release-info
+    ;
+  inherit enableRust enableOpencode enableRaMultiplex;
+}

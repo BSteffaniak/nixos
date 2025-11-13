@@ -1,30 +1,23 @@
 {
   nixpkgs-unstable,
   ra-multiplex-src,
+  rust-overlay ? null,
   opencode-release-info ? null,
+  # Optional overlay configuration
+  enableRust ? true,
+  enableOpencode ? true,
+  enableRaMultiplex ? true,
 }:
-[
-  (final: prev: {
-    unstable = import nixpkgs-unstable {
-      inherit (prev) system;
-      config.allowUnfree = true;
-    };
-  })
-
-  (final: prev: {
-    ra-multiplex-latest = final.rustPlatform.buildRustPackage {
-      pname = "ra-multiplex";
-      version = "unstable";
-
-      src = ra-multiplex-src;
-
-      cargoHash = "sha256-pwgNtxnO3oyX/w+tzRY5vAptw5JhpRhKCB2HYLEuA3A=";
-    };
-  })
-]
-++ (
-  if opencode-release-info != null then
-    import ./opencode-overlay.nix { inherit opencode-release-info; }
-  else
-    [ ]
-)
+let
+  mkOverlaysLib = import ./mkOverlays.nix {
+    inherit
+      nixpkgs-unstable
+      ra-multiplex-src
+      rust-overlay
+      opencode-release-info
+      ;
+  };
+in
+mkOverlaysLib.mkOverlays {
+  inherit enableRust enableOpencode enableRaMultiplex;
+}
