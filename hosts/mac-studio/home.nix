@@ -17,6 +17,17 @@
     };
   };
 
+  myConfig = {
+    shell.ssh = {
+      matchBlocks = {
+        "github.com" = {
+          user = "git";
+          identityFile = "~/.ssh/github_rsa";
+        };
+      };
+    };
+  };
+
   # Personal packages
   home.packages = with pkgs; [
     opencode-dev
