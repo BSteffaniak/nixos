@@ -18,7 +18,7 @@
       aider-chat
 
       # Cloud tools
-      unstable.flyctl
+      flyctl
 
       # Media tools
       mediainfo
