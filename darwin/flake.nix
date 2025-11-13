@@ -104,7 +104,12 @@
                   useGlobalPkgs = true;
                   useUserPackages = true;
                   backupFileExtension = "backup";
-                  users.${username} = import ../home/darwin;
+                  users.${username} = {
+                    imports = [
+                      ../home/darwin
+                      ../hosts/macbook-air/home.nix
+                    ];
+                  };
                   extraSpecialArgs = {
                     inherit inputs;
                     osConfig = config;
