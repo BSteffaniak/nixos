@@ -7,18 +7,21 @@
 
 {
   imports = [
-    ./homebrew.nix
-    ./system-defaults.nix
     ./applications.nix
+    ./homebrew.nix
     ./ssh.nix
+    ./system-defaults.nix
   ];
 
   config = {
     # Enable experimental features
-    nix.settings.experimental-features = "nix-command flakes";
-
-    # Allow unfree packages
-    nixpkgs.config.allowUnfree = true;
+    nix = {
+      package = pkgs.nix;
+      settings.experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+    };
 
     # Enable fish shell
     programs.fish.enable = true;

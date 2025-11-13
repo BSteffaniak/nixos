@@ -49,7 +49,7 @@
   # System packages specific to this host
   environment.systemPackages = with pkgs; [
     unstable.bpf-linker
-    libiconv  # Required for building chadthrottle on macOS
+    libiconv # Required for building chadthrottle on macOS
   ];
 
   # Networking

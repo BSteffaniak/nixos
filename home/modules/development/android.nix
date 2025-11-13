@@ -46,8 +46,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    nixpkgs.config.android_sdk.accept_license = true;
-
     home.packages = [
       android.androidsdk
       pkgs.android-studio

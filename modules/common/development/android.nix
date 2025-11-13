@@ -44,8 +44,6 @@ in
   };
 
   config = mkIf config.myConfig.development.android.enable {
-    nixpkgs.config.android_sdk.accept_license = true;
-
     environment.systemPackages = [
       android.androidsdk
       pkgs.android-studio

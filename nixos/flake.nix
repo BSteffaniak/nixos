@@ -44,6 +44,10 @@
             ../hosts/nixos-desktop
             home-manager.nixosModules.home-manager
             {
+              nixpkgs.config = {
+                allowUnfree = true;
+                android_sdk.accept_license = true;
+              };
               nixpkgs.overlays = [
                 inputs.nix-minecraft.overlay
               ]

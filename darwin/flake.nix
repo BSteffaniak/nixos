@@ -72,6 +72,10 @@
             home-manager.darwinModules.home-manager
             nix-homebrew.darwinModules.nix-homebrew
             {
+              nixpkgs.config = {
+                allowUnfree = true;
+                android_sdk.accept_license = true;
+              };
               nixpkgs.overlays = import ./overlays.nix {
                 inherit nixpkgs-unstable;
                 ra-multiplex-src = inputs.ra-multiplex;
@@ -121,6 +125,10 @@
             home-manager.darwinModules.home-manager
             nix-homebrew.darwinModules.nix-homebrew
             {
+              nixpkgs.config = {
+                allowUnfree = true;
+                android_sdk.accept_license = true;
+              };
               nixpkgs.overlays = import ./overlays.nix {
                 inherit nixpkgs-unstable;
                 ra-multiplex-src = inputs.ra-multiplex;
