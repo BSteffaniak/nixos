@@ -45,6 +45,18 @@
         };
       };
     };
+
+    # Neovim plugin configuration (macOS)
+    editors.neovim.plugins = {
+      supermaven = true; # Enable Supermaven AI assistant
+      copilot = false; # Disable GitHub Copilot
+      avante = false; # Disable Avante
+      jdtls = false; # Disable Java development tools (not needed on laptop)
+      elixir = false; # Disable Elixir plugins (not used on laptop)
+      ionide = false; # Disable F# support (not used on laptop)
+      dadbod = false; # Disable database tools (not needed on laptop)
+      treesitterHypr = false; # Disable Hyprland tree-sitter (macOS doesn't use Hyprland)
+    };
   };
 
   # Personal packages

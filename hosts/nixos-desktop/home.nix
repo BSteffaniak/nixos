@@ -78,6 +78,18 @@
       wallpaperFolder = "/hdd/wallpapers";
       defaultWallpaper = "pexels-pok-rie-33563-982263.jpg";
     };
+
+    # Neovim plugin configuration
+    editors.neovim.plugins = {
+      supermaven = true; # Enable Supermaven AI assistant
+      copilot = false; # Disable GitHub Copilot (use Supermaven instead)
+      avante = false; # Disable Avante (heavier AI assistant)
+      jdtls = true; # Enable Java development tools
+      elixir = true; # Enable Elixir plugins
+      ionide = true; # Enable F# support
+      dadbod = true; # Enable database tools
+      treesitterHypr = true; # Enable Hyprland tree-sitter (for NixOS desktop)
+    };
   };
 
   # Personal packages

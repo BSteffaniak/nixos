@@ -1,4 +1,26 @@
-require("lazy").setup({
+-- Load host-specific configuration with fallback to defaults
+-- This allows the config to work both with Nix (which generates host-config.lua)
+-- and standalone (where host-config.lua may not exist)
+local ok, host_config = pcall(require, "host-config")
+if not ok then
+  -- Standalone mode - use sensible defaults
+  -- Enable most plugins by default, except host-specific ones
+  host_config = {
+    plugins = {
+      supermaven = true,    -- Enable AI assistant by default
+      copilot = false,      -- Disabled (use supermaven instead)
+      avante = false,       -- Disabled (heavy dependency chain)
+      jdtls = true,         -- Enable Java tools
+      elixir = true,        -- Enable Elixir support
+      ionide = true,        -- Enable F# support
+      dadbod = true,        -- Enable database tools
+      treesitter_hypr = false, -- Disabled (Hyprland-specific, not universal)
+    },
+  }
+end
+
+-- Core plugins that are always enabled
+local plugins = {
   "tweekmonster/startuptime.vim",
 
   "williamboman/mason.nvim",
@@ -82,13 +104,9 @@ require("lazy").setup({
 
   "airblade/vim-gitgutter",
 
-  { "mhanberg/elixir.nvim",  dependencies = { "nvim-lua/plenary.nvim" } },
-  "elixir-editors/vim-elixir",
-
   {
     "nvim-treesitter/nvim-treesitter",
     dependencies = {
-      { "luckasRanarison/tree-sitter-hypr" },
       "nvim-treesitter/playground",
     },
     build = ":TSUpdate",
@@ -113,15 +131,6 @@ require("lazy").setup({
           },
         },
       })
-      local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-      parser_config.hypr = {
-        install_info = {
-          url = "https://github.com/luckasRanarison/tree-sitter-hypr",
-          files = { "src/parser.c" },
-          branch = "master",
-        },
-        filetype = "hypr",
-      }
     end,
   },
 
@@ -132,8 +141,6 @@ require("lazy").setup({
   },
 
   "f-person/git-blame.nvim",
-
-  "mfussenegger/nvim-jdtls",
 
   {
     "iamcco/markdown-preview.nvim",
@@ -179,9 +186,6 @@ require("lazy").setup({
     "ray-x/lsp_signature.nvim",
   },
 
-  "tpope/vim-dadbod",
-  "kristijanhusak/vim-dadbod-ui",
-
   "tpope/vim-fugitive",
   "tpope/vim-commentary",
   "tpope/vim-capslock",
@@ -189,8 +193,6 @@ require("lazy").setup({
   "wuelnerdotexe/vim-astro",
 
   "HerringtonDarkholme/yats.vim",
-
-  "ionide/Ionide-vim",
 
   {
     "fabridamicelli/cronex.nvim",
@@ -230,9 +232,71 @@ require("lazy").setup({
     },
   },
 
-  -- { "github/copilot.vim" },
+  "stevearc/dressing.nvim",
+}
 
-  {
+-- Conditional plugins based on host configuration
+
+-- Elixir plugins
+if host_config.plugins.elixir then
+  table.insert(plugins, { "mhanberg/elixir.nvim", dependencies = { "nvim-lua/plenary.nvim" } })
+  table.insert(plugins, "elixir-editors/vim-elixir")
+end
+
+-- Java development tools
+if host_config.plugins.jdtls then
+  table.insert(plugins, "mfussenegger/nvim-jdtls")
+end
+
+-- F# support (Ionide)
+if host_config.plugins.ionide then
+  table.insert(plugins, "ionide/Ionide-vim")
+end
+
+-- Database tools
+if host_config.plugins.dadbod then
+  table.insert(plugins, "tpope/vim-dadbod")
+  table.insert(plugins, "kristijanhusak/vim-dadbod-ui")
+end
+
+-- Tree-sitter Hyprland support
+if host_config.plugins.treesitter_hypr then
+  -- Add the hypr dependency to nvim-treesitter
+  for i, plugin in ipairs(plugins) do
+    if type(plugin) == "table" and plugin[1] == "nvim-treesitter/nvim-treesitter" then
+      if not plugin.dependencies then
+        plugin.dependencies = {}
+      end
+      -- Check if dependencies is a table or string
+      if type(plugin.dependencies) == "string" then
+        plugin.dependencies = { plugin.dependencies }
+      end
+      table.insert(plugin.dependencies, { "luckasRanarison/tree-sitter-hypr" })
+
+      -- Update the config to include hypr parser
+      local original_config = plugin.config
+      plugin.config = function()
+        if original_config then
+          original_config()
+        end
+        local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+        parser_config.hypr = {
+          install_info = {
+            url = "https://github.com/luckasRanarison/tree-sitter-hypr",
+            files = { "src/parser.c" },
+            branch = "master",
+          },
+          filetype = "hypr",
+        }
+      end
+      break
+    end
+  end
+end
+
+-- AI assistants (mutually exclusive recommended)
+if host_config.plugins.supermaven then
+  table.insert(plugins, {
     "supermaven-inc/supermaven-nvim",
     config = function()
       require("supermaven-nvim").setup({
@@ -242,76 +306,83 @@ require("lazy").setup({
         },
       })
     end,
-  },
+  })
+end
 
-  "stevearc/dressing.nvim",
+if host_config.plugins.copilot then
+  table.insert(plugins, { "github/copilot.vim" })
+end
 
-  -- {
-  --   "yetone/avante.nvim",
-  --   event = "VeryLazy",
-  --   version = false, -- Never set this value to "*"! Never!
-  --   opts = {
-  --     -- add any opts here
-  --     -- for example
-  --     provider = "openai",
-  --     openai = {
-  --       endpoint = "https://api.openai.com/v1",
-  --       -- model = "gpt-4o", -- your desired model (or use gpt-4o, etc.)
-  --       -- model = "o4-mini-high",
-  --       model = "o3-mini",
-  --       timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
-  --       temperature = 0,
-  --       max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
-  --       --reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
-  --     },
-  --     mappings = {
-  --       submit = {
-  --         -- keep the default Normal‑mode submit on <CR>…
-  --         normal = "<CR>",
-  --         -- …but switch Insert‑mode submit to <C‑e> instead of <C‑s>
-  --         insert = "<C-e>",
-  --       },
-  --     },
-  --   },
-  --   -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-  --   build = "make",
-  --   dependencies = {
-  --     "nvim-treesitter/nvim-treesitter",
-  --     "stevearc/dressing.nvim",
-  --     "nvim-lua/plenary.nvim",
-  --     "MunifTanjim/nui.nvim",
-  --     --- The below dependencies are optional,
-  --     "echasnovski/mini.pick", -- for file_selector provider mini.pick
-  --     "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
-  --     "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
-  --     "ibhagwan/fzf-lua", -- for file_selector provider fzf
-  --     "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-  --     "zbirenbaum/copilot.lua", -- for providers='copilot'
-  --     {
-  --       -- support for image pasting
-  --       "HakonHarnes/img-clip.nvim",
-  --       event = "VeryLazy",
-  --       opts = {
-  --         -- recommended settings
-  --         default = {
-  --           embed_image_as_base64 = false,
-  --           prompt_for_file_name = false,
-  --           drag_and_drop = {
-  --             insert_mode = true,
-  --           },
-  --           -- required for Windows users
-  --           -- use_absolute_path = true,
-  --         },
-  --       },
-  --     },
-  --     {
-  --       -- Make sure to set this up properly if you have lazy=true
-  --       'MeanderingProgrammer/render-markdown.nvim',
-  --       opts = {
-  --         file_types = { "markdown", "Avante" },
-  --       },
-  --       ft = { "markdown", "Avante" },
-  --     },
-  --   },
-  -- }
-})
+if host_config.plugins.avante then
+  table.insert(plugins, {
+    "yetone/avante.nvim",
+    event = "VeryLazy",
+    version = false, -- Never set this value to "*"! Never!
+    opts = {
+      -- add any opts here
+      -- for example
+      provider = "openai",
+      openai = {
+        endpoint = "https://api.openai.com/v1",
+        -- model = "gpt-4o", -- your desired model (or use gpt-4o, etc.)
+        -- model = "o4-mini-high",
+        model = "o3-mini",
+        timeout = 30000,          -- Timeout in milliseconds, increase this for reasoning models
+        temperature = 0,
+        max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
+        --reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
+      },
+      mappings = {
+        submit = {
+          -- keep the default Normal‑mode submit on <CR>…
+          normal = "<CR>",
+          -- …but switch Insert‑mode submit to <C‑e> instead of <C‑s>
+          insert = "<C-e>",
+        },
+      },
+    },
+    -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+    build = "make",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "stevearc/dressing.nvim",
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      --- The below dependencies are optional,
+      "echasnovski/mini.pick",      -- for file_selector provider mini.pick
+      "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
+      "hrsh7th/nvim-cmp",           -- autocompletion for avante commands and mentions
+      "ibhagwan/fzf-lua",           -- for file_selector provider fzf
+      "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
+      "zbirenbaum/copilot.lua",     -- for providers='copilot'
+      {
+        -- support for image pasting
+        "HakonHarnes/img-clip.nvim",
+        event = "VeryLazy",
+        opts = {
+          -- recommended settings
+          default = {
+            embed_image_as_base64 = false,
+            prompt_for_file_name = false,
+            drag_and_drop = {
+              insert_mode = true,
+            },
+            -- required for Windows users
+            -- use_absolute_path = true,
+          },
+        },
+      },
+      {
+        -- Make sure to set this up properly if you have lazy=true
+        "MeanderingProgrammer/render-markdown.nvim",
+        opts = {
+          file_types = { "markdown", "Avante" },
+        },
+        ft = { "markdown", "Avante" },
+      },
+    },
+  })
+end
+
+-- Setup lazy.nvim with all plugins
+require("lazy").setup(plugins)
