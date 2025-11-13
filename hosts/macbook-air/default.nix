@@ -20,6 +20,7 @@
 
     # Development tools
     development.rust.enable = true;
+    development.rust.includeNightly = true;
     development.nodejs.enable = true;
     development.go.enable = true;
     development.python.enable = true;
@@ -44,6 +45,12 @@
     darwin.systemDefaults.enable = true;
     darwin.applications.enable = true;
   };
+
+  # System packages specific to this host
+  environment.systemPackages = with pkgs; [
+    unstable.bpf-linker
+    libiconv  # Required for building chadthrottle on macOS
+  ];
 
   # Networking
   networking.hostName = "Bradens-MacBook-Air";
