@@ -105,8 +105,17 @@ in
     };
 
     # Symlink standalone neovim config from configs/neovim
+    # Filter out lazy-lock.json so Lazy can manage it
     xdg.configFile."nvim" = {
-      source = ../../../configs/neovim;
+      source = lib.cleanSourceWith {
+        src = ../../../configs/neovim;
+        filter =
+          path: type:
+          let
+            baseName = baseNameOf (toString path);
+          in
+          baseName != "lazy-lock.json";
+      };
       recursive = true;
     };
 
