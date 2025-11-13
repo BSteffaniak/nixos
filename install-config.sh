@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-REPO_URL="https://github.com/BSteffaniak/nixos-config.git"
+REPO_URL="https://github.com/BSteffaniak/nix-config.git"
 CONFIG_NAME="$1"
 DEST="${2:-$HOME/.config/$CONFIG_NAME}"
 
@@ -18,7 +18,7 @@ usage() {
   echo "  $0 tmux ~/.tmux"
   echo ""
   echo "Or install directly from GitHub:"
-  echo "  curl -fsSL https://raw.githubusercontent.com/BSteffaniak/nixos-config/main/install-config.sh | bash -s neovim"
+  echo "  curl -fsSL https://raw.githubusercontent.com/BSteffaniak/nix-config/master/install-config.sh | bash -s neovim"
   exit 1
 }
 
