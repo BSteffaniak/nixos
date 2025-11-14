@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 
@@ -32,13 +31,5 @@ in
     bottom.enable = mkEnable "Bottom system monitor";
     htop.enable = mkEnable "Htop system monitor";
     ncdu.enable = mkEnable "NCurses Disk Usage analyzer";
-  };
-
-  config = {
-    environment.systemPackages = mkMerge [
-      (mkIf cfg.bottom.enable [ pkgs.bottom ])
-      (mkIf cfg.htop.enable [ pkgs.htop ])
-      (mkIf cfg.ncdu.enable [ pkgs.ncdu ])
-    ];
   };
 }

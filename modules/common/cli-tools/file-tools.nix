@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 
@@ -34,15 +33,5 @@ in
     fd.enable = mkEnable "Fd file finder";
     unzip.enable = mkEnable "Unzip utility";
     zip.enable = mkEnable "Zip utility";
-  };
-
-  config = {
-    environment.systemPackages = mkMerge [
-      (mkIf cfg.fzf.enable [ pkgs.fzf ])
-      (mkIf cfg.ripgrep.enable [ pkgs.ripgrep ])
-      (mkIf cfg.fd.enable [ pkgs.fd ])
-      (mkIf cfg.unzip.enable [ pkgs.unzip ])
-      (mkIf cfg.zip.enable [ pkgs.zip ])
-    ];
   };
 }

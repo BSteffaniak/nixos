@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 
@@ -53,26 +52,5 @@ in
     };
 
     opencode.enable = mkEnable "OpenCode and Claude Code";
-  };
-
-  config = {
-    environment.systemPackages = mkMerge [
-      (mkIf cfg.direnv.enable [ pkgs.direnv ])
-      (mkIf cfg.jq.enable [ pkgs.jq ])
-      (mkIf cfg.parallel.enable [ pkgs.parallel ])
-      (mkIf cfg.write-good.enable [ pkgs.write-good ])
-      (mkIf cfg.cloc.enable [ pkgs.cloc ])
-      (mkIf cfg.watchexec.enable [ pkgs.watchexec ])
-      (mkIf cfg.lsof.enable [ pkgs.lsof ])
-      (mkIf cfg.killall.enable [ pkgs.killall ])
-      (mkIf cfg.nix-search.enable [ pkgs.nix-search ])
-      (mkIf cfg.media.ffmpeg.enable [ pkgs.ffmpeg ])
-      (mkIf cfg.media.flac.enable [ pkgs.flac ])
-      (mkIf cfg.media.mediainfo.enable [ pkgs.mediainfo ])
-      (mkIf cfg.opencode.enable [
-        pkgs.unstable.opencode
-        pkgs.unstable.claude-code
-      ])
-    ];
   };
 }

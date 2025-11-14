@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 
@@ -33,14 +32,5 @@ in
     eslint.enable = mkEnable "ESLint daemon";
     prettier.enable = mkEnable "Prettier daemon";
     taplo.enable = mkEnable "TOML formatter";
-  };
-
-  config = {
-    environment.systemPackages = mkMerge [
-      (mkIf cfg.nixfmt.enable [ pkgs.nixfmt-rfc-style ])
-      (mkIf cfg.eslint.enable [ pkgs.eslint_d ])
-      (mkIf cfg.prettier.enable [ pkgs.prettierd ])
-      (mkIf cfg.taplo.enable [ pkgs.taplo ])
-    ];
   };
 }

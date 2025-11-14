@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 
@@ -31,12 +30,5 @@ in
 
     zellij.enable = mkEnable "Zellij terminal workspace";
     tmux.enable = mkEnable "Tmux terminal multiplexer";
-  };
-
-  config = {
-    environment.systemPackages = mkMerge [
-      (mkIf cfg.zellij.enable [ pkgs.zellij ])
-      (mkIf cfg.tmux.enable [ pkgs.tmux ])
-    ];
   };
 }
