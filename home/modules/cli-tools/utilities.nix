@@ -9,11 +9,29 @@ with lib;
 
 let
   cfg = config.myConfig.cliTools.utilities;
+
+  # Helper for enable options with custom default
+  mkEnableOption' =
+    defaultValue: description:
+    mkOption {
+      type = types.bool;
+      default = defaultValue;
+      description = "Enable ${description}";
+    };
+
+  mkEnable = mkEnableOption' cfg.enableAll;
+  mkMediaEnable = mkEnableOption' cfg.media.enableAll;
 in
 {
   options.myConfig.cliTools.utilities = {
+    enableAll = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Enable all utility tools (can be overridden per-tool)";
+    };
+
     direnv = {
-      enable = mkEnableOption "Direnv for per-directory environments";
+      enable = mkEnable "Direnv for per-directory environments";
       nix-direnv = mkOption {
         type = types.bool;
         default = true;
@@ -21,22 +39,28 @@ in
       };
     };
 
-    jq.enable = mkEnableOption "JSON processor";
-    parallel.enable = mkEnableOption "GNU parallel";
-    write-good.enable = mkEnableOption "Writing quality checker";
-    cloc.enable = mkEnableOption "Lines of code counter";
-    watchexec.enable = mkEnableOption "File watcher/executor";
-    lsof.enable = mkEnableOption "List open files utility";
-    killall.enable = mkEnableOption "Killall utility";
-    nix-search.enable = mkEnableOption "Nix package search";
+    jq.enable = mkEnable "JSON processor";
+    parallel.enable = mkEnable "GNU parallel";
+    write-good.enable = mkEnable "writing quality checker";
+    cloc.enable = mkEnable "lines of code counter";
+    watchexec.enable = mkEnable "file watcher/executor";
+    lsof.enable = mkEnable "list open files utility";
+    killall.enable = mkEnable "killall utility";
+    nix-search.enable = mkEnable "Nix package search";
 
     media = {
-      ffmpeg.enable = mkEnableOption "FFmpeg media processor";
-      flac.enable = mkEnableOption "FLAC codec";
-      mediainfo.enable = mkEnableOption "Media info analyzer";
+      enableAll = mkOption {
+        type = types.bool;
+        default = cfg.enableAll;
+        description = "Enable all media tools (can be overridden per-tool)";
+      };
+
+      ffmpeg.enable = mkMediaEnable "FFmpeg media processor";
+      flac.enable = mkMediaEnable "FLAC codec";
+      mediainfo.enable = mkMediaEnable "media info analyzer";
     };
 
-    opencode.enable = mkEnableOption "OpenCode and Claude Code";
+    opencode.enable = mkEnable "OpenCode and Claude Code";
   };
 
   config = {

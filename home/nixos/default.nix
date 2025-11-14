@@ -50,17 +50,20 @@
 
     # CLI tools - mirror from system config
     cliTools.terminals = {
+      enableAll = osConfig.myConfig.cliTools.terminals.enableAll or false;
       tmux.enable = osConfig.myConfig.cliTools.terminals.tmux.enable or false;
       zellij.enable = osConfig.myConfig.cliTools.terminals.zellij.enable or false;
       wezterm.enable = osConfig.myConfig.cliTools.terminals.wezterm.enable or false;
       ghostty.enable = osConfig.myConfig.cliTools.terminals.ghostty.enable or false;
     };
     cliTools.monitoring = {
+      enableAll = osConfig.myConfig.cliTools.monitoring.enableAll or false;
       bottom.enable = osConfig.myConfig.cliTools.monitoring.bottom.enable or false;
       htop.enable = osConfig.myConfig.cliTools.monitoring.htop.enable or false;
       ncdu.enable = osConfig.myConfig.cliTools.monitoring.ncdu.enable or false;
     };
     cliTools.fileTools = {
+      enableAll = osConfig.myConfig.cliTools.fileTools.enableAll or false;
       fzf.enable = osConfig.myConfig.cliTools.fileTools.fzf.enable or false;
       ripgrep.enable = osConfig.myConfig.cliTools.fileTools.ripgrep.enable or false;
       fd.enable = osConfig.myConfig.cliTools.fileTools.fd.enable or false;
@@ -68,12 +71,14 @@
       zip.enable = osConfig.myConfig.cliTools.fileTools.zip.enable or false;
     };
     cliTools.formatters = {
+      enableAll = osConfig.myConfig.cliTools.formatters.enableAll or false;
       nixfmt.enable = osConfig.myConfig.cliTools.formatters.nixfmt.enable or false;
       eslint.enable = osConfig.myConfig.cliTools.formatters.eslint.enable or false;
       prettier.enable = osConfig.myConfig.cliTools.formatters.prettier.enable or false;
       taplo.enable = osConfig.myConfig.cliTools.formatters.taplo.enable or false;
     };
     cliTools.utilities = {
+      enableAll = osConfig.myConfig.cliTools.utilities.enableAll or false;
       direnv.enable = osConfig.myConfig.cliTools.utilities.direnv.enable or false;
       jq.enable = osConfig.myConfig.cliTools.utilities.jq.enable or false;
       parallel.enable = osConfig.myConfig.cliTools.utilities.parallel.enable or false;
@@ -84,6 +89,7 @@
       killall.enable = osConfig.myConfig.cliTools.utilities.killall.enable or false;
       nix-search.enable = osConfig.myConfig.cliTools.utilities.nix-search.enable or false;
       media = {
+        enableAll = osConfig.myConfig.cliTools.utilities.media.enableAll or false;
         ffmpeg.enable = osConfig.myConfig.cliTools.utilities.media.ffmpeg.enable or false;
         flac.enable = osConfig.myConfig.cliTools.utilities.media.flac.enable or false;
         mediainfo.enable = osConfig.myConfig.cliTools.utilities.media.mediainfo.enable or false;
