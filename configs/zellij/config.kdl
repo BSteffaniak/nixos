@@ -183,14 +183,8 @@ keybinds clear-defaults=true {
     }
     shared_except "locked" "scroll" "search" "tmux" {
         bind "Ctrl a" { SwitchToMode "tmux"; }
-        bind "Ctrl f" {
-            LaunchOrFocusPlugin "session-manager" {
-                floating true
-                move_to_focused_tab true
-            }
-        }
     }
-    shared_except "locked" "scroll" "search" {
+    shared_except "locked" {
         bind "Ctrl f" {
             LaunchOrFocusPlugin "session-manager" {
                 floating true
@@ -224,7 +218,6 @@ keybinds clear-defaults=true {
         bind "Ctrl b" { PageScrollUp; }
         bind "Ctrl c" { ScrollToBottom; SwitchToMode "normal"; }
         bind "d" { HalfPageScrollDown; }
-        bind "Ctrl f" { PageScrollDown; }
         bind "h" { PageScrollUp; }
         bind "j" { ScrollDown; }
         bind "k" { ScrollUp; }
