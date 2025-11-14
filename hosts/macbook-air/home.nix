@@ -18,11 +18,7 @@
   };
 
   myConfig = {
-    # CLI tools configs
-    cli-tools.bottom.enable = true;
-    cli-tools.htop.enable = true;
-    cli-tools.terminals.enable = true;
-    cli-tools.tmux.enable = true;
+    # CLI tools - mirrored from system config (no need to specify here)
 
     # Development tool configs
     development.lazygit.enable = true;

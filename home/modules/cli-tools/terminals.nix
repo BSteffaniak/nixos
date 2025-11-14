@@ -8,49 +8,42 @@
 with lib;
 
 let
-  cfg = config.myConfig.cli-tools.terminals;
+  cfg = config.myConfig.cliTools.terminals;
 in
 {
-  options.myConfig.cli-tools.terminals = {
-    enable = mkEnableOption "Terminal emulator configurations";
-
-    ghostty = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Enable Ghostty terminal configuration";
-    };
-
-    wezterm = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Enable WezTerm terminal configuration";
-    };
-
-    zellij = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Enable Zellij terminal workspace configuration";
-    };
+  options.myConfig.cliTools.terminals = {
+    zellij.enable = mkEnableOption "Zellij terminal workspace";
+    tmux.enable = mkEnableOption "Tmux terminal multiplexer";
+    wezterm.enable = mkEnableOption "WezTerm terminal emulator";
+    ghostty.enable = mkEnableOption "Ghostty terminal emulator";
   };
 
-  config = mkIf cfg.enable {
-    # Ghostty config
-    xdg.configFile."ghostty/config" = mkIf cfg.ghostty {
-      source = ../../../configs/ghostty/config;
+  config = {
+    # Zellij
+    programs.zellij.enable = cfg.zellij.enable;
+    xdg.configFile."zellij/config.kdl" = mkIf cfg.zellij.enable {
+      source = ../../../configs/zellij/config.kdl;
+    };
+    xdg.configFile."zellij/plugins" = mkIf cfg.zellij.enable {
+      source = ../../../configs/zellij/plugins;
+      recursive = true;
     };
 
-    # WezTerm config
-    programs.wezterm = mkIf cfg.wezterm {
+    # Tmux
+    programs.tmux = mkIf cfg.tmux.enable {
+      enable = true;
+      extraConfig = builtins.readFile ../../../configs/tmux/tmux.conf;
+    };
+
+    # WezTerm
+    programs.wezterm = mkIf cfg.wezterm.enable {
       enable = true;
       extraConfig = builtins.readFile ../../../configs/wezterm/wezterm.lua;
     };
 
-    # Zellij config
-    programs.zellij = mkIf cfg.zellij {
-      enable = true;
-    };
-    xdg.configFile."zellij/config.kdl" = mkIf cfg.zellij {
-      source = ../../../configs/zellij/config.kdl;
+    # Ghostty
+    xdg.configFile."ghostty/config" = mkIf cfg.ghostty.enable {
+      source = ../../../configs/ghostty/config;
     };
   };
 }
