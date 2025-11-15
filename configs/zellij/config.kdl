@@ -573,4 +573,4 @@ show_startup_tips false
 // post_command_discovery_hook "echo $RESURRECT_COMMAND | sed <your_regex_here>"
 
 // Wrap resurrected commands in fish shell so the shell remains when the command exits
-post_command_discovery_hook "printf 'fish -c %s' \"'$RESURRECT_COMMAND; exec fish'\""
+// post_command_discovery_hook "printf 'fish -c %s' \"'$RESURRECT_COMMAND; exec fish'\""
