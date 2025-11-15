@@ -5,6 +5,7 @@ Modular, cross-platform Nix configuration supporting **NixOS**, **macOS (nix-dar
 ## Architecture Overview
 
 This repository uses a **home-manager-first architecture** that enables:
+
 - ✅ Full NixOS system configurations
 - ✅ macOS (Darwin) system configurations with Homebrew
 - ✅ **Standalone home-manager** for Ubuntu and other Linux distros
@@ -75,6 +76,7 @@ All configurations in `configs/` are portable and can be used **without Nix** on
 ### Quick Install (Any Config, Any OS)
 
 Using the helper script:
+
 ```bash
 # Download and run installer
 curl -fsSL https://raw.githubusercontent.com/BSteffaniak/nix-config/master/install-config.sh | bash -s neovim
@@ -186,20 +188,24 @@ darwin-rebuild switch --flake ./darwin#macbook-air
 ## Available Hosts
 
 ### NixOS Systems
+
 - **nixos-desktop**: NixOS desktop PC with NVIDIA GPU, Hyprland, development tools
 
-### macOS Systems  
+### macOS Systems
+
 - **macbook-air**: MacBook Air (Apple Silicon) with development tools
 - **mac-studio**: Mac Studio with development tools
 
 ### Standalone Home Manager (Ubuntu, etc.)
+
 - **ubuntu-laptop**: Ubuntu laptop with home-manager only (see [UBUNTU-SETUP.md](UBUNTU-SETUP.md))
 
 ## Using on Ubuntu or Other Linux Distros
 
-This configuration can be used on Ubuntu or any Linux distro via standalone home-manager! 
+This configuration can be used on Ubuntu or any Linux distro via standalone home-manager!
 
 **Quick start:**
+
 ```bash
 # Install Nix
 sh <(curl -L https://nixos.org/nix/install) --daemon
@@ -214,6 +220,7 @@ nix run home-manager/release-25.05 -- switch --flake ~/.config/nixos#braden@ubun
 See [UBUNTU-SETUP.md](UBUNTU-SETUP.md) for detailed Ubuntu setup instructions.
 
 **What you get:**
+
 - All development tools (Rust, Node.js, Go, Python, etc.)
 - Rootless Podman for containers (Docker-compatible!)
 - DevOps tools (kubectl, helm, terraform, aws-cli)
@@ -547,12 +554,14 @@ home/
 ### Key Principles
 
 **Generic Base Configs:**
+
 - `home/nixos/default.nix` and `home/darwin/default.nix` are generic templates
 - They dynamically read username and settings from host configuration
 - No personal preferences or hardcoded values
 - Safe to use when bootstrapping new hosts
 
 **Personal Overrides:**
+
 - Create `hosts/<hostname>/home.nix` for host-specific home-manager config
 - Contains your personal preferences (themes, packages, etc.)
 - Not copied when bootstrapping new hosts
@@ -660,6 +669,7 @@ Auto-detecting rebuild script that identifies your host and uses the correct fla
 ```
 
 **Features:**
+
 - Automatically detects hostname and selects correct flake
 - `--diff` or `--compare` mode builds configuration and shows changes using nvd
 - Falls back to `nix store diff-closures` if nvd is not available
@@ -680,6 +690,7 @@ Format all Nix files in the repository using nixfmt. Supports check mode for CI/
 ```
 
 **Features:**
+
 - Formats all 107+ `.nix` files in the repository
 - Excludes `.git/` and `result*` build artifacts
 - Color-coded output showing progress
