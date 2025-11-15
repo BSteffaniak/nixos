@@ -3,10 +3,7 @@
   ra-multiplex-src,
   rust-overlay,
   opencode-release-info ? null,
-  zellij-fork-src ? null,
-  zellij-fork-rev ? "unknown",
-  zellij-fork-ref ? "custom",
-  zellij-fork-narHash ? "",
+  zellij-fork ? null,
   # Optional overlay configuration
   enableRust ? true,
   enableOpencode ? true,
@@ -21,10 +18,7 @@ import ../lib/overlays.nix {
     ra-multiplex-src
     rust-overlay
     opencode-release-info
-    zellij-fork-src
-    zellij-fork-rev
-    zellij-fork-ref
-    zellij-fork-narHash
+    zellij-fork
     ;
   inherit
     enableRust

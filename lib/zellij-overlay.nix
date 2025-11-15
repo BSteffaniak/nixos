@@ -1,9 +1,4 @@
-{
-  zellij-fork-src,
-  zellij-rev ? "unknown",
-  zellij-ref ? "custom",
-  zellij-narHash ? "",
-}:
+{ zellij-fork }:
 [
   (
     final: prev:
@@ -12,8 +7,8 @@
       # Extract first 8 chars of narHash for compact version string
       # This is PURE and guaranteed to change when source changes
       narHashShort =
-        if zellij-narHash != "" then
-          builtins.substring 7 8 zellij-narHash # Skip "sha256-" prefix
+        if zellij-fork.narHash != "" then
+          builtins.substring 7 8 zellij-fork.narHash # Skip "sha256-" prefix
         else
           "unknown";
     in
@@ -44,9 +39,9 @@
           pname = "zellij";
           # Version now includes narHash which changes with ANY source change
           # This guarantees a rebuild when you update the flake input
-          version = "0.44.0-${zellij-ref}-${narHashShort}-${builtins.substring 0 7 zellij-rev}";
+          version = "0.44.0-${zellij-fork.ref}-${narHashShort}-${builtins.substring 0 7 zellij-fork.rev}";
 
-          src = zellij-fork-src;
+          src = zellij-fork.src;
 
           # Patch the VERSION constant directly in source code
           # This avoids modifying Cargo.toml/Cargo.lock which would break the FOD hash

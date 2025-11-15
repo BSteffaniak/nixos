@@ -38,12 +38,8 @@
       ...
     }:
     let
-      # Extract zellij fork metadata from flake.lock (PURE evaluation)
-      lockData = builtins.fromJSON (builtins.readFile ./flake.lock);
-      zellijLock = lockData.nodes.zellij-fork or { };
-      zellijRev = zellijLock.locked.rev or "unknown";
-      zellijRef = zellijLock.original.ref or "toggle-session";
-      zellijNarHash = zellijLock.locked.narHash or "";
+      # Helper to extract git input metadata from flake.lock
+      mkGitInput = import ../lib/mk-git-input.nix { lockFile = ./flake.lock; };
     in
     {
 
@@ -68,10 +64,7 @@
                 ra-multiplex-src = inputs.ra-multiplex;
                 rust-overlay = inputs.rust-overlay;
                 opencode-release-info = inputs.opencode-release-info;
-                zellij-fork-src = inputs.zellij-fork;
-                zellij-fork-rev = zellijRev;
-                zellij-fork-ref = zellijRef;
-                zellij-fork-narHash = zellijNarHash;
+                zellij-fork = mkGitInput "zellij-fork" inputs.zellij-fork;
                 # All overlays enabled by default for backward compatibility
                 # Hosts can override by setting myConfig.overlays.* options
                 enableRust = true;

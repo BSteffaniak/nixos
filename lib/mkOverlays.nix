@@ -3,10 +3,7 @@
   ra-multiplex-src,
   rust-overlay,
   opencode-release-info ? null,
-  zellij-fork-src ? null,
-  zellij-fork-rev ? "unknown",
-  zellij-fork-ref ? "custom",
-  zellij-fork-narHash ? "",
+  zellij-fork ? null,
 }:
 {
   # Build overlays with optional components
@@ -51,13 +48,8 @@
           [ ];
 
       zellijOverlays =
-        if enableZellijFork && zellij-fork-src != null then
-          (import ./zellij-overlay.nix {
-            inherit zellij-fork-src;
-            zellij-rev = zellij-fork-rev;
-            zellij-ref = zellij-fork-ref;
-            zellij-narHash = zellij-fork-narHash;
-          })
+        if enableZellijFork && zellij-fork != null then
+          (import ./zellij-overlay.nix { inherit zellij-fork; })
         else
           [ ];
 
