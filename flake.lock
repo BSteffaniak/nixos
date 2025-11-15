@@ -162,7 +162,8 @@
         "nixpkgs-unstable": "nixpkgs-unstable",
         "opencode-release-info": "opencode-release-info",
         "ra-multiplex": "ra-multiplex",
-        "rust-overlay": "rust-overlay"
+        "rust-overlay": "rust-overlay",
+        "zellij-fork": "zellij-fork"
       }
     },
     "rust-overlay": {
@@ -182,6 +183,23 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "zellij-fork": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1763231592,
+        "narHash": "sha256-TmpqTRnvnNX/3+tXqRn+2++jy7U21s4TXK/1Z/GQRrs=",
+        "owner": "BSteffaniak",
+        "repo": "zellij",
+        "rev": "d31fe193d82f4cd4dad0cda1a7aaf91f4483ded8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "BSteffaniak",
+        "ref": "toggle-session",
+        "repo": "zellij",
         "type": "github"
       }
     }

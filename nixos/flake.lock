@@ -266,7 +266,8 @@
         "opencode-release-info": "opencode-release-info",
         "ra-multiplex": "ra-multiplex",
         "rust-overlay": "rust-overlay",
-        "swww": "swww"
+        "swww": "swww",
+        "zellij-fork": "zellij-fork"
       }
     },
     "rust-overlay": {
@@ -342,6 +343,23 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "zellij-fork": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1763238305,
+        "narHash": "sha256-fnwb8owTSZZHbXWeMwyhKnGLs8nEkybqscpTuIO8EIQ=",
+        "owner": "BSteffaniak",
+        "repo": "zellij",
+        "rev": "cb08dfd1910e3aaf749832cf514cdafb16500e09",
+        "type": "github"
+      },
+      "original": {
+        "owner": "BSteffaniak",
+        "ref": "toggle-session",
+        "repo": "zellij",
         "type": "github"
       }
     }

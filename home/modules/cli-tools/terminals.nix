@@ -36,8 +36,11 @@ in
   };
 
   config = {
-    # Zellij
-    programs.zellij.enable = cfg.zellij.enable;
+    # Zellij - use custom package when available
+    programs.zellij = mkIf cfg.zellij.enable {
+      enable = true;
+      package = pkgs.zellij-custom or pkgs.zellij;
+    };
     xdg.configFile."zellij/config.kdl" = mkIf cfg.zellij.enable {
       source = ../../../configs/zellij/config.kdl;
     };

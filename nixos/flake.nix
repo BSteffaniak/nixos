@@ -23,6 +23,10 @@
       url = "https://api.github.com/repos/sst/opencode/releases/latest";
       flake = false;
     };
+    zellij-fork = {
+      url = "github:BSteffaniak/zellij/toggle-session";
+      flake = false;
+    };
   };
 
   outputs =
@@ -33,6 +37,14 @@
       home-manager,
       ...
     }:
+    let
+      # Extract zellij fork metadata from flake.lock (PURE evaluation)
+      lockData = builtins.fromJSON (builtins.readFile ./flake.lock);
+      zellijLock = lockData.nodes.zellij-fork or { };
+      zellijRev = zellijLock.locked.rev or "unknown";
+      zellijRef = zellijLock.original.ref or "toggle-session";
+      zellijNarHash = zellijLock.locked.narHash or "";
+    in
     {
 
       # NixOS Configurations
@@ -56,11 +68,16 @@
                 ra-multiplex-src = inputs.ra-multiplex;
                 rust-overlay = inputs.rust-overlay;
                 opencode-release-info = inputs.opencode-release-info;
+                zellij-fork-src = inputs.zellij-fork;
+                zellij-fork-rev = zellijRev;
+                zellij-fork-ref = zellijRef;
+                zellij-fork-narHash = zellijNarHash;
                 # All overlays enabled by default for backward compatibility
                 # Hosts can override by setting myConfig.overlays.* options
                 enableRust = true;
                 enableOpencode = true;
                 enableRaMultiplex = true;
+                enableZellijFork = true;
               });
             }
             (
