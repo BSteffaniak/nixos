@@ -44,10 +44,6 @@ in
     xdg.configFile."zellij/config.kdl" = mkIf cfg.zellij.enable {
       source = ../../../configs/zellij/config.kdl;
     };
-    xdg.configFile."zellij/plugins" = mkIf cfg.zellij.enable {
-      source = ../../../configs/zellij/plugins;
-      recursive = true;
-    };
 
     # Tmux
     programs.tmux = mkIf cfg.tmux.enable {
