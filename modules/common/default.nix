@@ -12,7 +12,6 @@ with lib;
     ./development
     ./shell
     ./editors
-    ./cli-tools
   ];
 
   # Common options available on all platforms
