@@ -41,10 +41,6 @@
       home-manager,
       ...
     }:
-    let
-      # Helper to extract git input metadata from flake.lock
-      mkGitInput = import ../lib/mk-git-input.nix { lockFile = ./flake.lock; };
-    in
     {
 
       # NixOS Configurations
@@ -64,12 +60,13 @@
                 inputs.nix-minecraft.overlay
               ]
               ++ (import ./overlays.nix {
+                inherit (nixpkgs) lib;
                 inherit nixpkgs-unstable;
                 ra-multiplex-src = inputs.ra-multiplex;
                 rust-overlay = inputs.rust-overlay;
                 opencode-release-info = inputs.opencode-release-info;
-                zellij-fork = mkGitInput "zellij-fork" inputs.zellij-fork;
-                cronstrue-src = mkGitInput "cronstrue" inputs.cronstrue;
+                zellij-fork = inputs.zellij-fork;
+                cronstrue-src = inputs.cronstrue;
                 # All overlays enabled by default for backward compatibility
                 # Hosts can override by setting myConfig.overlays.* options
                 enableRust = true;

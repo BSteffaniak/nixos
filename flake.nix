@@ -40,18 +40,16 @@
       ...
     }:
     let
-      # Helper to extract git input metadata from flake.lock
-      mkGitInput = import ./lib/mk-git-input.nix { lockFile = ./flake.lock; };
-
       # Shared overlays for all configurations
       # All overlays enabled by default for backward compatibility
       overlays = import ./lib/overlays.nix {
+        inherit (nixpkgs) lib;
         inherit nixpkgs-unstable;
         ra-multiplex-src = inputs.ra-multiplex;
         rust-overlay = inputs.rust-overlay;
         opencode-release-info = inputs.opencode-release-info;
-        zellij-fork = mkGitInput "zellij-fork" inputs.zellij-fork;
-        cronstrue-src = mkGitInput "cronstrue" inputs.cronstrue;
+        zellij-fork = inputs.zellij-fork;
+        cronstrue-src = inputs.cronstrue;
         # Hosts can override these by creating their own overlay list
         enableRust = true;
         enableOpencode = true;

@@ -64,10 +64,6 @@
       homebrew-cask,
       ...
     }:
-    let
-      # Helper to extract git input metadata from flake.lock
-      mkGitInput = import ../lib/mk-git-input.nix { lockFile = ./flake.lock; };
-    in
     {
 
       # Darwin (macOS) Configurations
@@ -85,11 +81,12 @@
                 android_sdk.accept_license = true;
               };
               nixpkgs.overlays = import ./overlays.nix {
+                inherit (nixpkgs-darwin) lib;
                 inherit nixpkgs-unstable;
                 ra-multiplex-src = inputs.ra-multiplex;
                 rust-overlay = inputs.rust-overlay;
                 opencode-release-info = inputs.opencode-release-info;
-                cronstrue-src = mkGitInput "cronstrue" inputs.cronstrue;
+                cronstrue-src = inputs.cronstrue;
                 # All overlays enabled by default for backward compatibility
                 # Hosts can override by setting myConfig.overlays.* options
                 enableRust = true;
@@ -150,11 +147,12 @@
                 android_sdk.accept_license = true;
               };
               nixpkgs.overlays = import ./overlays.nix {
+                inherit (nixpkgs-darwin) lib;
                 inherit nixpkgs-unstable;
                 ra-multiplex-src = inputs.ra-multiplex;
                 rust-overlay = inputs.rust-overlay;
                 opencode-release-info = inputs.opencode-release-info;
-                cronstrue-src = mkGitInput "cronstrue" inputs.cronstrue;
+                cronstrue-src = inputs.cronstrue;
                 # All overlays enabled by default for backward compatibility
                 # Hosts can override by setting myConfig.overlays.* options
                 enableRust = true;

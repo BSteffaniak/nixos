@@ -1,4 +1,5 @@
 {
+  lib,
   nixpkgs-unstable,
   ra-multiplex-src,
   rust-overlay,
@@ -8,18 +9,20 @@
   enableRust ? true,
   enableOpencode ? true,
   enableRaMultiplex ? true,
-  enableCronstrue ? false,
+  enableCronstrue ? true,
 }:
 # Import common overlays from lib/
 # This now includes all overlays (rust, ra-multiplex, opencode, unstable, cronstrue)
 import ../lib/overlays.nix {
   inherit
+    lib
     nixpkgs-unstable
     ra-multiplex-src
     rust-overlay
     opencode-release-info
     cronstrue-src
     ;
+  lockFile = ./flake.lock;
   inherit
     enableRust
     enableOpencode

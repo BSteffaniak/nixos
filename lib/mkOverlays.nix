@@ -1,76 +1,72 @@
+# Automatic overlay system
+# Each overlay should accept { inputs, enable, mkGitInput ... } and return a list of overlays
 {
-  nixpkgs-unstable,
-  ra-multiplex-src,
-  rust-overlay,
-  opencode-release-info ? null,
-  zellij-fork ? null,
-  cronstrue-src ? null,
+  lib,
+  inputs,
+  mkGitInput,
+  overlayFunctions,
 }:
 {
   # Build overlays with optional components
-  # This function allows hosts to opt-out of specific overlays
+  # Enable flags map to overlay filenames (e.g., enableRust -> rust.nix)
   mkOverlays =
     {
       enableRust ? true,
       enableOpencode ? true,
       enableRaMultiplex ? true,
       enableZellijFork ? false,
-      enableCronstrue ? false,
+      enableCronstrue ? true,
     }:
     let
       # Core overlays (always enabled)
       coreOverlays = [
         # Unstable packages overlay (core functionality)
         (final: prev: {
-          unstable = import nixpkgs-unstable {
+          unstable = import inputs.nixpkgs-unstable {
             inherit (prev) system;
             config.allowUnfree = true;
           };
         })
       ];
 
-      # Optional overlays
-      rustOverlays = if enableRust then (import ./rust-overlay.nix { inherit rust-overlay; }) else [ ];
+      # List of available overlays
+      # Overlay functions are imported in lib/overlays.nix and passed here
+      availableOverlays = [
+        {
+          enable = enableRust;
+          overlay = overlayFunctions.rust;
+        }
+        {
+          enable = enableOpencode;
+          overlay = overlayFunctions.opencode;
+        }
+        {
+          enable = enableRaMultiplex;
+          overlay = overlayFunctions.ra-multiplex;
+        }
+        {
+          enable = enableZellijFork;
+          overlay = overlayFunctions.zellij;
+        }
+        {
+          enable = enableCronstrue;
+          overlay = overlayFunctions.cronstrue;
+        }
+      ];
 
-      raMultiplexOverlays =
-        if enableRaMultiplex then
-          [
-            (final: prev: {
-              ra-multiplex-latest = final.rustPlatform.buildRustPackage {
-                pname = "ra-multiplex";
-                version = "unstable";
-
-                src = ra-multiplex-src;
-
-                cargoHash = "sha256-pwgNtxnO3oyX/w+tzRY5vAptw5JhpRhKCB2HYLEuA3A=";
-              };
-            })
-          ]
+      # Load each enabled overlay
+      loadOverlay =
+        { enable, overlay }:
+        if enable then
+          overlay {
+            inherit inputs mkGitInput;
+            enable = true;
+          }
         else
           [ ];
 
-      zellijOverlays =
-        if enableZellijFork && zellij-fork != null then
-          (import ./zellij-overlay.nix { inherit zellij-fork; })
-        else
-          [ ];
-
-      opencodeOverlays =
-        if enableOpencode && opencode-release-info != null then
-          (import ./opencode-overlay.nix { inherit opencode-release-info; })
-        else
-          [ ];
-
-      cronstrueOverlays =
-        if enableCronstrue && cronstrue-src != null then
-          (import ./cronstrue-overlay.nix { inherit cronstrue-src; })
-        else
-          [ ];
+      # Load all enabled overlays
+      autoOverlays = lib.flatten (map loadOverlay availableOverlays);
     in
-    coreOverlays
-    ++ rustOverlays
-    ++ raMultiplexOverlays
-    ++ zellijOverlays
-    ++ opencodeOverlays
-    ++ cronstrueOverlays;
+    coreOverlays ++ autoOverlays;
 }
