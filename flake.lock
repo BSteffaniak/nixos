@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "cronstrue": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1761753145,
+        "narHash": "sha256-AMshXfgAu3ygjLK0qojb3B5Hjiny7dxi1B6pMKa9hOE=",
+        "owner": "bradymholt",
+        "repo": "cronstrue",
+        "rev": "cb2a99c22abe748b1f8d1e0facf93f8cc880c6e3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "bradymholt",
+        "repo": "cronstrue",
+        "type": "github"
+      }
+    },
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": [
@@ -156,6 +172,7 @@
     },
     "root": {
       "inputs": {
+        "cronstrue": "cronstrue",
         "home-manager": "home-manager",
         "neovim-nightly-overlay": "neovim-nightly-overlay",
         "nixpkgs": "nixpkgs_2",

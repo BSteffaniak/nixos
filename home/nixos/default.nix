@@ -83,6 +83,7 @@
       jq.enable = osConfig.myConfig.cliTools.utilities.jq.enable or false;
       parallel.enable = osConfig.myConfig.cliTools.utilities.parallel.enable or false;
       write-good.enable = osConfig.myConfig.cliTools.utilities.write-good.enable or false;
+      cronstrue.enable = osConfig.myConfig.cliTools.utilities.cronstrue.enable or false;
       cloc.enable = osConfig.myConfig.cliTools.utilities.cloc.enable or false;
       watchexec.enable = osConfig.myConfig.cliTools.utilities.watchexec.enable or false;
       lsof.enable = osConfig.myConfig.cliTools.utilities.lsof.enable or false;

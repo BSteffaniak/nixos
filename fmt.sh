@@ -60,10 +60,10 @@ FAILED_FILES=()
 for file in "${FILES[@]}"; do
   # Skip empty entries
   [[ -z "$file" ]] && continue
-  
+
   # Get relative path for display
   rel_path="${file#$SCRIPT_DIR/}"
-  
+
   if [[ "$CHECK_MODE" == true ]]; then
     # Check mode: verify if file is formatted
     if nixfmt --check "$file" &> /dev/null; then
@@ -94,7 +94,7 @@ if [[ "$CHECK_MODE" == true ]]; then
   echo -e "  Already formatted: ${GREEN}$ALREADY_FORMATTED${NC} files"
   echo -e "  Need formatting:   ${YELLOW}$FORMATTED${NC} files"
   echo -e "  Total checked:     ${BLUE}$FILE_COUNT${NC} files"
-  
+
   if [[ $FORMATTED -gt 0 ]]; then
     echo ""
     echo -e "${YELLOW}⚠  Some files need formatting. Run './fmt.sh' to format them.${NC}"
@@ -102,13 +102,14 @@ if [[ "$CHECK_MODE" == true ]]; then
   else
     echo ""
     echo -e "${GREEN}✓ All files are properly formatted!${NC}"
+    npx prettier "**/*.{md,yml,yaml,ts,json,css,js}"
     exit 0
   fi
 else
   echo -e "  Formatted:  ${GREEN}$FORMATTED${NC} files"
   echo -e "  Failed:     ${RED}$FAILED${NC} files"
   echo -e "  Total:      ${BLUE}$FILE_COUNT${NC} files"
-  
+
   if [[ $FAILED -gt 0 ]]; then
     echo ""
     echo -e "${RED}Failed to format:${NC}"
@@ -119,6 +120,7 @@ else
   else
     echo ""
     echo -e "${GREEN}✓ Successfully formatted all files!${NC}"
+    npx prettier --write "**/*.{md,yml,yaml,ts,json,css,js}"
     exit 0
   fi
 fi

@@ -27,6 +27,10 @@
       url = "github:BSteffaniak/zellij/toggle-session";
       flake = false;
     };
+    cronstrue = {
+      url = "github:bradymholt/cronstrue";
+      flake = false;
+    };
   };
 
   outputs =
@@ -65,12 +69,14 @@
                 rust-overlay = inputs.rust-overlay;
                 opencode-release-info = inputs.opencode-release-info;
                 zellij-fork = mkGitInput "zellij-fork" inputs.zellij-fork;
+                cronstrue-src = mkGitInput "cronstrue" inputs.cronstrue;
                 # All overlays enabled by default for backward compatibility
                 # Hosts can override by setting myConfig.overlays.* options
                 enableRust = true;
                 enableOpencode = true;
                 enableRaMultiplex = true;
                 enableZellijFork = true;
+                enableCronstrue = true;
               });
             }
             (

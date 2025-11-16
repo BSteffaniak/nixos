@@ -72,6 +72,7 @@
       utilities.jq.enable = true;
       utilities.parallel.enable = true;
       utilities.write-good.enable = true;
+      utilities.cronstrue.enable = true;
       utilities.cloc.enable = true;
       utilities.watchexec.enable = true;
       utilities.lsof.enable = true;

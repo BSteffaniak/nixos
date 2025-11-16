@@ -33,6 +33,7 @@ in
     jq.enable = mkEnable "JSON processor";
     parallel.enable = mkEnable "GNU parallel";
     write-good.enable = mkEnable "writing quality checker";
+    cronstrue.enable = mkEnable "cron expression diagnostic tool";
     cloc.enable = mkEnable "lines of code counter";
     watchexec.enable = mkEnable "file watcher/executor";
     lsof.enable = mkEnable "list open files utility";

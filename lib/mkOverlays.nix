@@ -4,6 +4,7 @@
   rust-overlay,
   opencode-release-info ? null,
   zellij-fork ? null,
+  cronstrue-src ? null,
 }:
 {
   # Build overlays with optional components
@@ -14,6 +15,7 @@
       enableOpencode ? true,
       enableRaMultiplex ? true,
       enableZellijFork ? false,
+      enableCronstrue ? false,
     }:
     let
       # Core overlays (always enabled)
@@ -58,6 +60,17 @@
           (import ./opencode-overlay.nix { inherit opencode-release-info; })
         else
           [ ];
+
+      cronstrueOverlays =
+        if enableCronstrue && cronstrue-src != null then
+          (import ./cronstrue-overlay.nix { inherit cronstrue-src; })
+        else
+          [ ];
     in
-    coreOverlays ++ rustOverlays ++ raMultiplexOverlays ++ zellijOverlays ++ opencodeOverlays;
+    coreOverlays
+    ++ rustOverlays
+    ++ raMultiplexOverlays
+    ++ zellijOverlays
+    ++ opencodeOverlays
+    ++ cronstrueOverlays;
 }

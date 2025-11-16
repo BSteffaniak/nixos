@@ -42,6 +42,7 @@ in
     jq.enable = mkEnable "JSON processor";
     parallel.enable = mkEnable "GNU parallel";
     write-good.enable = mkEnable "writing quality checker";
+    cronstrue.enable = mkEnable "cron expression diagnostic tool";
     cloc.enable = mkEnable "lines of code counter";
     watchexec.enable = mkEnable "file watcher/executor";
     lsof.enable = mkEnable "list open files utility";
@@ -75,6 +76,7 @@ in
       (mkIf cfg.jq.enable [ pkgs.jq ])
       (mkIf cfg.parallel.enable [ pkgs.parallel ])
       (mkIf cfg.write-good.enable [ pkgs.write-good ])
+      (mkIf cfg.cronstrue.enable [ pkgs.cronstrue-custom ])
       (mkIf cfg.cloc.enable [ pkgs.cloc ])
       (mkIf cfg.watchexec.enable [ pkgs.watchexec ])
       (mkIf cfg.lsof.enable [ pkgs.lsof ])
