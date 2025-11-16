@@ -14,27 +14,26 @@ This repository uses a **home-manager-first architecture** that enables:
 
 ## Flake Design
 
-This repository uses **three flakes** for different use cases:
+This repository uses a **unified flake** at the root that provides:
 
-- **`flake.nix`** (root) - Standalone home-manager configurations for Ubuntu, etc.
-- **`nixos/flake.nix`** - NixOS system configurations (no Darwin dependencies)
-- **`darwin/flake.nix`** - macOS (Darwin) system configurations with Homebrew
+- **NixOS configurations** (`nixosConfigurations`) - Full system configurations for NixOS
+- **Darwin configurations** (`darwinConfigurations`) - macOS system configurations with Homebrew
+- **Standalone home-manager** (`homeConfigurations`) - For Ubuntu and other Linux distros
 
-This ensures optimal dependency management and enables using this config on non-NixOS systems.
+**Benefits:**
+
+- ✅ Single `flake.lock` - all platforms use identical package versions
+- ✅ Add inputs once, available everywhere
+- ✅ No version drift between platforms
+- ✅ Simplified overlay management
 
 ## Structure
 
 ```
 .
-├── nixos/
-│   ├── flake.nix            # NixOS flake (no Darwin dependencies)
-│   └── flake.lock           # NixOS locked dependencies
-│
-├── darwin/
-│   ├── flake.nix            # Darwin flake (with Homebrew)
-│   └── flake.lock           # Darwin locked dependencies
-│
-├── rebuild.sh               # Auto-detecting rebuild script (chooses correct flake)
+├── flake.nix                # Unified flake for all platforms
+├── flake.lock               # Single lock file for consistent versions
+├── rebuild.sh               # Auto-detecting rebuild script
 │
 ├── hosts/                   # Per-machine configurations
 │   ├── nixos-desktop/      # NixOS desktop PC
@@ -136,8 +135,9 @@ The `rebuild.sh` script automatically detects your platform and uses the correct
 # Boot into new config (NixOS only)
 ./rebuild.sh --boot
 
-# On NixOS: uses nixos#nixos-desktop
-# On Darwin: uses darwin#macbook-air or mac-studio
+# On NixOS: uses #nixos-desktop
+# On Darwin: uses #macbook-air or #mac-studio
+# On Ubuntu: use home-manager switch --flake .#braden@ubuntu-laptop
 ```
 
 ### Diff Mode (Preview Changes)
@@ -166,23 +166,30 @@ This uses `nvd` (nix version diff) to provide a clear summary of changes. If `nv
 
 ```bash
 # Build without applying
-sudo nixos-rebuild build --flake ./nixos#nixos-desktop
+sudo nixos-rebuild build --flake .#nixos-desktop
 
 # Apply configuration
-sudo nixos-rebuild switch --flake ./nixos#nixos-desktop
+sudo nixos-rebuild switch --flake .#nixos-desktop
 
 # Boot into new config (safer)
-sudo nixos-rebuild boot --flake ./nixos#nixos-desktop
+sudo nixos-rebuild boot --flake .#nixos-desktop
 ```
 
 **macOS (Darwin):**
 
 ```bash
 # Build without applying
-darwin-rebuild build --flake ./darwin#macbook-air
+darwin-rebuild build --flake .#macbook-air
 
 # Apply configuration
-darwin-rebuild switch --flake ./darwin#macbook-air
+darwin-rebuild switch --flake .#macbook-air
+```
+
+**Ubuntu/Standalone:**
+
+```bash
+# Apply standalone home-manager configuration
+home-manager switch --flake .#braden@ubuntu-laptop
 ```
 
 ## Available Hosts
@@ -345,6 +352,103 @@ myConfig = {
 - **`nuget.sources`**: Attribute set of custom NuGet sources
 - **`nuget.configFile`**: Path to custom NuGet.Config file
 
+## Adding Custom Overlays
+
+The unified flake makes adding custom package overlays simple with automatic discovery:
+
+### Step 1: Add Input to Flake
+
+Edit `flake.nix` and add your input:
+
+```nix
+inputs = {
+  # ... existing inputs
+
+  my-package = {
+    url = "github:user/my-package";
+    flake = false;
+  };
+};
+```
+
+### Step 2: Create Overlay File
+
+Create `lib/overlays/my-package.nix`:
+
+```nix
+{
+  inputs,
+  enable,
+  mkGitInput,
+}:
+final: prev:
+if !enable then
+  { }
+else
+  let
+    src = inputs.my-package;
+    gitMeta = mkGitInput "my-package";
+  in
+  {
+    my-package = prev.stdenv.mkDerivation {
+      pname = "my-package";
+      version = gitMeta.version;
+      inherit src;
+      # ... build instructions
+    };
+  }
+```
+
+### Step 3: Register Overlay
+
+Edit `lib/overlays.nix`:
+
+```nix
+# Import all overlay functions
+overlayFunctions = {
+  rust = import ./overlays/rust.nix;
+  opencode = import ./overlays/opencode.nix;
+  # ... existing overlays
+  myPackage = import ./overlays/my-package.nix;  # Add this line
+};
+```
+
+Edit `lib/mkOverlays.nix`:
+
+```nix
+mkOverlays =
+  {
+    enableRust ? true,
+    enableOpencode ? true,
+    # ... existing enables
+    enableMyPackage ? true,  # Add this line
+  }:
+  [
+    # ... existing overlay calls
+    (overlayFunctions.myPackage { inherit inputs mkGitInput; enable = enableMyPackage; })
+  ];
+```
+
+### Step 4: Update Flake to Pass Input
+
+Edit `flake.nix` in the `mkOverlays` function:
+
+```nix
+mkOverlays = system: nixpkgsLib: import ./lib/overlays.nix {
+  inherit (nixpkgsLib) lib;
+  inherit nixpkgs-unstable;
+  # ... existing inputs
+  my-package-src = inputs.my-package;  # Add this
+  # ...
+};
+```
+
+### That's It!
+
+Run `nix flake update` and your overlay is available on **all platforms** automatically!
+
+**Total files modified:** 4 (down from 9+ with the old multi-flake approach)
+
 ## Adding Packages
 
 Understanding where to add packages based on their purpose and scope:
@@ -458,9 +562,9 @@ Understanding where to add packages based on their purpose and scope:
 
 ```bash
 # Build without applying
-sudo nixos-rebuild build --flake ./nixos#nixos-desktop  # NixOS
+sudo nixos-rebuild build --flake .#nixos-desktop  # NixOS
 # or
-darwin-rebuild build --flake ./darwin#macbook-air  # Darwin
+darwin-rebuild build --flake .#macbook-air  # Darwin
 
 # Compare what changed
 nvd diff /run/current-system ./result
@@ -512,10 +616,11 @@ If you prefer to set up a host manually:
 
 1. Create a new directory in `hosts/` (e.g., `hosts/new-laptop/`)
 2. Create `hosts/new-laptop/default.nix` based on existing examples
-3. Add the host to the appropriate flake:
-   - For NixOS: Edit `nixos/flake.nix` and add to `nixosConfigurations`
-   - For Darwin: Edit `darwin/flake.nix` and add to `darwinConfigurations`
-4. Update `rebuild.sh` to recognize the new hostname and point to correct flake directory
+3. Add the host to the root `flake.nix`:
+   - For NixOS: Add to `nixosConfigurations` section
+   - For Darwin: Add to `darwinConfigurations` section
+   - For Standalone: Add to `homeConfigurations` section
+4. Update `rebuild.sh` to recognize the new hostname
 
 ## Module System
 
@@ -626,25 +731,22 @@ home-manager = {
 
 ## Updating
 
-**NixOS:**
+**All Platforms (Unified Flake):**
 
 ```bash
-cd nixos
-nix flake update                           # Update all inputs
-nix flake lock --update-input nixpkgs     # Update specific input
-cd ..
+# Update all inputs (affects all platforms)
+nix flake update
+
+# Update specific input
+nix flake lock --update-input nixpkgs          # NixOS packages
+nix flake lock --update-input nixpkgs-darwin  # macOS packages
+nix flake lock --update-input rust-overlay    # Rust toolchain
+
+# Apply updates
 ./rebuild.sh
 ```
 
-**Darwin:**
-
-```bash
-cd darwin
-nix flake update                           # Update all inputs
-nix flake lock --update-input nixpkgs-darwin  # Update specific input
-cd ..
-./rebuild.sh
-```
+**Note:** The unified flake means updating packages updates them for **all platforms** consistently. No more version drift!
 
 ## Helper Scripts
 

@@ -8,7 +8,6 @@
   opencode-release-info ? null,
   zellij-fork ? null,
   cronstrue-src ? null,
-  lockFile ? ../flake.lock, # Each flake can override this
   # Optional overlay configuration
   enableRust ? true,
   enableOpencode ? true,
@@ -30,7 +29,8 @@ let
   };
 
   # Helper to extract git input metadata from flake.lock
-  mkGitInput = import ./mk-git-input.nix { inherit lockFile; };
+  # Always uses root flake.lock with unified flake structure
+  mkGitInput = import ./mk-git-input.nix { lockFile = ../flake.lock; };
 
   # Import all overlay functions (these must be imported here, not in mkOverlays.nix)
   overlayFunctions = {
