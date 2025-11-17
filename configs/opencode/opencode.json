@@ -130,6 +130,7 @@
                     "git log *": "allow",
                     "git show *": "allow",
                     "git diff *": "allow",
+                    "git diff-tree *": "allow",
                     "git branch *": "allow",
                     "git ls-files *": "allow",
                     "git remote get-url *": "allow",
