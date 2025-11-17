@@ -83,20 +83,12 @@ else
                 perl # Required for openssl-sys build
               ];
 
-              buildInputs =
-                with final;
-                [
-                  openssl
-                  openssl.dev # Add dev output for headers
-                  curl
-                  zstd
-                ]
-                ++ final.lib.optionals final.stdenv.isDarwin [
-                  final.darwin.apple_sdk.frameworks.DiskArbitration
-                  final.darwin.apple_sdk.frameworks.Foundation
-                  final.darwin.apple_sdk.frameworks.Security
-                  final.libiconv
-                ];
+              buildInputs = with final; [
+                openssl
+                openssl.dev # Add dev output for headers
+                curl
+                zstd
+              ];
 
               # Use system OpenSSL instead of compiling from source
               OPENSSL_NO_VENDOR = "1";
